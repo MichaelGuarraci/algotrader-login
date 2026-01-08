@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlgoTrader Pro - Setup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .setup-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 50px;
+            max-width: 550px;
+            width: 100%;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo h1 {
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .logo p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 10px;
+        }
+        
+        .step {
+            width: 40px;
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            transition: background 0.3s;
+        }
+        
+        .step.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .form-section {
+            display: none;
+        }
+        
+        .form-section.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"], input[type="password"] {
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+        
+        .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .button:active {
+            transform: translateY(0);
+        }
+        
+        .button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .button-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            margin-top: 10px;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #dc3545;
+            display: none;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #28a745;
+            display: none;
+        }
+        
+        .info-message {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #17a2b8;
+            font-size: 0.9em;
+        }
+        
+        .warning-message {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #ffc107;
+            font-size: 0.95em;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            color: #667eea;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .help-text {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 600px) {
+            .setup-container {
+                padding: 30px 20px;
+            }
+            
+            .logo h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="setup-container">
+        <div class="logo">
+            <h1>🚀 AlgoTrader Pro</h1>
+            <p>One-Time Setup</p>
+        </div>
+        
+        <div class="step-indicator">
+            <div class="step active" id="step1-indicator"></div>
+            <div class="step" id="step2-indicator"></div>
+        </div>
+        
+        <div id="error-message" class="error-message"></div>
+        <div id="success-message" class="success-message"></div>
+        
+        <!-- STEP 1: LICENSE KEY -->
+        <div id="step1" class="form-section active">
+            <h2 style="margin-bottom: 20px; color: #333;">Step 1: License Key</h2>
+            
+            <form id="license-form">
+                <div class="form-group">
+                    <label for="license-key">Enter Your Beta License Key</label>
+                    <input 
+                        type="text" 
+                        id="license-key" 
+                        placeholder="BETA-TEST-XXX"
+                        required
+                        autocomplete="off">
+                    <div class="help-text">Find this in your beta invitation email</div>
+                </div>
+                
+                <button type="submit" class="button" id="license-submit">
+                    Continue to API Setup →
+                </button>
+            </form>
+            
+            <div class="info-message">
+                <strong>📧 Need help?</strong><br>
+                Contact your beta program administrator if you don't have a license key.
+            </div>
+        </div>
+        
+        <!-- STEP 2: API CONFIGURATION -->
+        <div id="step2" class="form-section">
+            <h2 style="margin-bottom: 20px; color: #333;">Step 2: Connect Broker</h2>
+            
+            <div class="warning-message">
+                <strong>⚠️ Important:</strong> This can only be done ONCE and cannot be changed! Your broker selection is permanent for security reasons.
+            </div>
+            
+            <form id="api-form">
+                <div class="form-group">
+                    <label for="broker">Select Broker</label>
+                    <select id="broker" required>
+                        <option value="alpaca">Alpaca (Recommended)</option>
+                        <option value="schwab" disabled>TD Ameritrade/Schwab (Coming Soon)</option>
+                        <option value="ibkr" disabled>Interactive Brokers (Coming Soon)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="api-key">Alpaca API Key</label>
+                    <input 
+                        type="text" 
+                        id="api-key"
+                        placeholder="PKXXXXXXXXXXXXXXXX"
+                        required>
+                    <div class="help-text">Found in your Alpaca dashboard under API Keys</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="secret-key">Alpaca Secret Key</label>
+                    <input 
+                        type="password" 
+                        id="secret-key"
+                        placeholder="Enter your secret key"
+                        required>
+                    <div class="help-text">Keep this secret! Never share with anyone.</div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input 
+                            type="checkbox" 
+                            id="paper-trading"
+                            checked>
+                        <label for="paper-trading">
+                            ☑️ Use Paper Trading (Recommended - no real money!)
+                        </label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="button" id="api-submit">
+                    🚀 Complete Setup & Launch Dashboard
+                </button>
+                
+                <button type="button" class="button button-secondary" id="back-button">
+                    ← Back to License
+                </button>
+            </form>
+            
+            <div class="info-message">
+                <strong>Don't have API keys?</strong><br>
+                <a href="https://alpaca.markets" target="_blank" style="color: #17a2b8; font-weight: bold;">Sign up at alpaca.markets</a> - Paper trading is FREE!
+            </div>
+        </div>
+        
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p id="loading-text">Validating...</p>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 AlgoTrader Pro. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        // ===================================================================
+        // CONFIGURATION
+        // ===================================================================
+        
+        const API_URL = 'https://algotrader-backend.onrender.com/api';
+        const DASHBOARD_URL = 'https://algotrader-frontend2.vercel.app';
+        
+        // ===================================================================
+        // STATE MANAGEMENT
+        // ===================================================================
+        
+        let currentStep = 1;
+        let jwtToken = null;
+        let licenseKey = null;
+        
+        // ===================================================================
+        // DOM ELEMENTS
+        // ===================================================================
+        
+        const elements = {
+            // Forms
+            licenseForm: document.getElementById('license-form'),
+            apiForm: document.getElementById('api-form'),
+            
+            // Inputs
+            licenseInput: document.getElementById('license-key'),
+            brokerSelect: document.getElementById('broker'),
+            apiKeyInput: document.getElementById('api-key'),
+            secretKeyInput: document.getElementById('secret-key'),
+            paperTradingCheckbox: document.getElementById('paper-trading'),
+            
+            // Sections
+            step1: document.getElementById('step1'),
+            step2: document.getElementById('step2'),
+            
+            // Indicators
+            step1Indicator: document.getElementById('step1-indicator'),
+            step2Indicator: document.getElementById('step2-indicator'),
+            
+            // Messages
+            errorMessage: document.getElementById('error-message'),
+            successMessage: document.getElementById('success-message'),
+            loading: document.getElementById('loading'),
+            loadingText: document.getElementById('loading-text'),
+            
+            // Buttons
+            backButton: document.getElementById('back-button')
+        };
+        
+        // ===================================================================
+        // TOKEN REFRESH SYSTEM
+        // ===================================================================
+        
+        function setupTokenRefresh() {
+            // Refresh token every 20 hours (tokens expire in 24 hours)
+            setInterval(async () => {
+                const token = localStorage.getItem('auth_token');
+                if (token) {
+                    try {
+                        const response = await fetch(`${API_URL}/auth/refresh`, {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data.token) {
+                                localStorage.setItem('auth_token', data.token);
+                                console.log('Token refreshed successfully');
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Token refresh failed:', error);
+                    }
+                }
+            }, 20 * 60 * 60 * 1000); // 20 hours
+        }
+        
+        // ===================================================================
+        // STEP NAVIGATION
+        // ===================================================================
+        
+        function goToStep(step) {
+            // Hide all sections
+            elements.step1.classList.remove('active');
+            elements.step2.classList.remove('active');
+            
+            // Update indicators
+            elements.step1Indicator.classList.remove('active');
+            elements.step2Indicator.classList.remove('active');
+            
+            // Show correct section
+            if (step === 1) {
+                elements.step1.classList.add('active');
+                elements.step1Indicator.classList.add('active');
+            } else if (step === 2) {
+                elements.step2.classList.add('active');
+                elements.step1Indicator.classList.add('active');
+                elements.step2Indicator.classList.add('active');
+            }
+            
+            currentStep = step;
+            hideMessages();
+        }
+        
+        // ===================================================================
+        // MESSAGE HELPERS
+        // ===================================================================
+        
+        function showError(message) {
+            elements.errorMessage.textContent = message;
+            elements.errorMessage.style.display = 'block';
+            elements.successMessage.style.display = 'none';
+            elements.loading.style.display = 'none';
+        }
+        
+        function showSuccess(message) {
+            elements.successMessage.textContent = message;
+            elements.successMessage.style.display = 'block';
+            elements.errorMessage.style.display = 'none';
+        }
+        
+        function hideMessages() {
+            elements.errorMessage.style.display = 'none';
+            elements.successMessage.style.display = 'none';
+        }
+        
+        function showLoading(text = 'Processing...') {
+            elements.loadingText.textContent = text;
+            elements.loading.style.display = 'block';
+            hideMessages();
+        }
+        
+        function hideLoading() {
+            elements.loading.style.display = 'none';
+        }
+        
+        // ===================================================================
+        // STEP 1: LICENSE VALIDATION
+        // ===================================================================
+        
+        elements.licenseForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            licenseKey = elements.licenseInput.value.trim();
+            
+            if (!licenseKey) {
+                showError('Please enter your license key');
+                return;
+            }
+            
+            showLoading('Validating license key...');
+            
+            try {
+                const response = await fetch(`${API_URL}/auth/validate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ license_key: licenseKey })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success && data.token) {
+                    jwtToken = data.token;
+                    
+                    // Store token
+                    localStorage.setItem('auth_token', data.token);
+                    localStorage.setItem('user_info', JSON.stringify(data.user));
+                    
+                    // Check if broker already configured
+                    if (data.user.broker && data.user.broker_locked) {
+                        // Already configured! Go straight to dashboard
+                        showSuccess('License validated! Redirecting...');
+                        setTimeout(() => {
+                            window.location.href = DASHBOARD_URL;
+                        }, 1000);
+                    } else {
+                        // First time - need API configuration
+                        hideLoading();
+                        showSuccess('License validated! Please configure your broker.');
+                        setTimeout(() => {
+                            goToStep(2);
+                        }, 1500);
+                    }
+                } else {
+                    hideLoading();
+                    showError(data.message || 'Invalid license key. Please check and try again.');
+                }
+            } catch (error) {
+                hideLoading();
+                showError('Connection error. Please check your internet and try again.');
+                console.error('License validation error:', error);
+            }
+        });
+        
+        // ===================================================================
+        // STEP 2: API CONFIGURATION
+        // ===================================================================
+        
+        elements.apiForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const broker = elements.brokerSelect.value;
+            const apiKey = elements.apiKeyInput.value.trim();
+            const secretKey = elements.secretKeyInput.value.trim();
+            const paperTrading = elements.paperTradingCheckbox.checked;
+            
+            if (!apiKey || !secretKey) {
+                showError('Please enter both API key and secret key');
+                return;
+            }
+            
+            showLoading('Validating API keys with Alpaca...');
+            
+            try {
+                // Step 1: Validate API keys
+                const validateResponse = await fetch(`${API_URL}/broker/validate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({
+                        broker,
+                        api_key: apiKey,
+                        secret_key: secretKey,
+                        paper_trading: paperTrading
+                    })
+                });
+                
+                const validateData = await validateResponse.json();
+                
+                if (!validateData.success) {
+                    hideLoading();
+                    showError(validateData.message || 'Invalid API keys. Please check your credentials.');
+                    return;
+                }
+                
+                // Step 2: Save configuration
+                elements.loadingText.textContent = 'Saving configuration...';
+                
+                const saveResponse = await fetch(`${API_URL}/broker/select`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({
+                        broker,
+                        api_key: apiKey,
+                        secret_key: secretKey,
+                        paper_trading: paperTrading
+                    })
+                });
+                
+                const saveData = await saveResponse.json();
+                
+                if (saveData.success) {
+                    // Update user info
+                    const userInfo = JSON.parse(localStorage.getItem('user_info') || '{}');
+                    userInfo.broker = broker;
+                    userInfo.broker_locked = true;
+                    localStorage.setItem('user_info', JSON.stringify(userInfo));
+                    
+                    // Setup token refresh
+                    setupTokenRefresh();
+                    
+                    // Success! Redirect to dashboard
+                    hideLoading();
+                    showSuccess('✅ Setup complete! Launching dashboard...');
+                    
+                    setTimeout(() => {
+                        window.location.href = DASHBOARD_URL;
+                    }, 2000);
+                } else {
+                    hideLoading();
+                    showError(saveData.message || 'Failed to save configuration. Please try again.');
+                }
+            } catch (error) {
+                hideLoading();
+                showError('Connection error. Please check your internet and try again.');
+                console.error('API configuration error:', error);
+            }
+        });
+        
+        // ===================================================================
+        // BACK BUTTON
+        // ===================================================================
+        
+        elements.backButton.addEventListener('click', () => {
+            goToStep(1);
+            elements.apiKeyInput.value = '';
+            elements.secretKeyInput.value = '';
+        });
+        
+        // ===================================================================
+        // AUTO-FOCUS
+        // ===================================================================
+        
+        window.addEventListener('load', () => {
+            elements.licenseInput.focus();
+        });
+        
+        // ===================================================================
+        // CHECK IF ALREADY LOGGED IN
+        // ===================================================================
+        
+        if (localStorage.getItem('auth_token')) {
+            const userInfo = JSON.parse(localStorage.getItem('user_info') || '{}');
+            if (userInfo.broker_locked) {
+                // Already configured - redirect to dashboard
+                window.location.href = DASHBOARD_URL;
+            }
+        }
+    </script>
+</body>
+</html>
