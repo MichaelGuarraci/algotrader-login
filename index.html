@@ -673,18 +673,6 @@
         window.addEventListener('load', () => {
             elements.licenseInput.focus();
         });
-        
-        // ===================================================================
-        // CHECK IF ALREADY LOGGED IN
-        // ===================================================================
-        
-        if (localStorage.getItem('auth_token')) {
-            const userInfo = JSON.parse(localStorage.getItem('user_info') || '{}');
-            if (userInfo.broker_locked) {
-                // Already configured - redirect to dashboard
-                window.location.href = DASHBOARD_URL;
-            }
-        }
     </script>
 </body>
 </html>
