@@ -545,7 +545,9 @@
                         // Already configured! Go straight to dashboard
                         showSuccess('License validated! Redirecting...');
                         setTimeout(() => {
-                            window.location.href = DASHBOARD_URL;
+                            // Pass token in URL for cross-domain authentication
+                            const userInfo = encodeURIComponent(JSON.stringify(data.user));
+                            window.location.href = `${DASHBOARD_URL}?token=${data.token}&user=${userInfo}`;
                         }, 1000);
                     } else {
                         // First time - need API configuration
@@ -638,12 +640,14 @@
                     // Setup token refresh
                     setupTokenRefresh();
                     
-                    // Success! Redirect to dashboard
+                    // Success! Redirect to dashboard with token in URL
                     hideLoading();
                     showSuccess('✅ Setup complete! Launching dashboard...');
                     
                     setTimeout(() => {
-                        window.location.href = DASHBOARD_URL;
+                        // Pass token in URL for cross-domain authentication
+                        const encodedUserInfo = encodeURIComponent(JSON.stringify(userInfo));
+                        window.location.href = `${DASHBOARD_URL}?token=${jwtToken}&user=${encodedUserInfo}`;
                     }, 2000);
                 } else {
                     hideLoading();
