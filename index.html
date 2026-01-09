@@ -507,6 +507,41 @@
         }
         
         // ===================================================================
+        // BACKEND KEEP-ALIVE SYSTEM
+        // ===================================================================
+        
+        // Wake up backend on page load
+        async function wakeUpBackend() {
+            try {
+                console.log('Waking up backend...');
+                await fetch(`${API_URL.replace('/api', '')}/api/health`);
+                console.log('Backend is awake!');
+            } catch (error) {
+                console.log('Backend wake-up call sent');
+            }
+        }
+        
+        // Keep backend awake with periodic pings
+        function startKeepAlive() {
+            // Ping every 2 minutes to keep backend awake aggressively
+            setInterval(async () => {
+                try {
+                    await fetch(`${API_URL.replace('/api', '')}/api/health`);
+                    console.log('Keep-alive ping sent (every 2 minutes)');
+                } catch (error) {
+                    console.log('Keep-alive ping failed:', error);
+                }
+            }, 2 * 60 * 1000); // 2 minutes
+        }
+        
+        // Start on page load
+        window.addEventListener('load', () => {
+            wakeUpBackend();
+            startKeepAlive();
+            elements.licenseInput.focus();
+        });
+        
+        // ===================================================================
         // STEP 1: LICENSE VALIDATION
         // ===================================================================
         
@@ -522,6 +557,11 @@
             
             showLoading('Validating license key...');
             
+            // Show "waking up backend" message after 3 seconds
+            const wakeupTimeout = setTimeout(() => {
+                elements.loadingText.textContent = 'Waking up backend... (this may take 30-60 seconds on first load)';
+            }, 3000);
+            
             try {
                 const response = await fetch(`${API_URL}/auth/validate`, {
                     method: 'POST',
@@ -532,6 +572,8 @@
                 });
                 
                 const data = await response.json();
+                
+                clearTimeout(wakeupTimeout); // Clear the wake-up message
                 
                 if (data.success && data.token) {
                     jwtToken = data.token;
@@ -562,6 +604,7 @@
                     showError(data.message || 'Invalid license key. Please check and try again.');
                 }
             } catch (error) {
+                clearTimeout(wakeupTimeout);
                 hideLoading();
                 showError('Connection error. Please check your internet and try again.');
                 console.error('License validation error:', error);
@@ -668,14 +711,6 @@
             goToStep(1);
             elements.apiKeyInput.value = '';
             elements.secretKeyInput.value = '';
-        });
-        
-        // ===================================================================
-        // AUTO-FOCUS
-        // ===================================================================
-        
-        window.addEventListener('load', () => {
-            elements.licenseInput.focus();
         });
     </script>
 </body>
