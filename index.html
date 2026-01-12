@@ -507,41 +507,6 @@
         }
         
         // ===================================================================
-        // BACKEND KEEP-ALIVE SYSTEM
-        // ===================================================================
-        
-        // Wake up backend on page load
-        async function wakeUpBackend() {
-            try {
-                console.log('Waking up backend...');
-                await fetch(`${API_URL.replace('/api', '')}/api/health`);
-                console.log('Backend is awake!');
-            } catch (error) {
-                console.log('Backend wake-up call sent');
-            }
-        }
-        
-        // Keep backend awake with periodic pings
-        function startKeepAlive() {
-            // Ping every 2 minutes to keep backend awake aggressively
-            setInterval(async () => {
-                try {
-                    await fetch(`${API_URL.replace('/api', '')}/api/health`);
-                    console.log('Keep-alive ping sent (every 2 minutes)');
-                } catch (error) {
-                    console.log('Keep-alive ping failed:', error);
-                }
-            }, 2 * 60 * 1000); // 2 minutes
-        }
-        
-        // Start on page load
-        window.addEventListener('load', () => {
-            wakeUpBackend();
-            startKeepAlive();
-            elements.licenseInput.focus();
-        });
-        
-        // ===================================================================
         // STEP 1: LICENSE VALIDATION
         // ===================================================================
         
@@ -557,11 +522,6 @@
             
             showLoading('Validating license key...');
             
-            // Show "waking up backend" message after 3 seconds
-            const wakeupTimeout = setTimeout(() => {
-                elements.loadingText.textContent = 'Waking up backend... (this may take 30-60 seconds on first load)';
-            }, 3000);
-            
             try {
                 const response = await fetch(`${API_URL}/auth/validate`, {
                     method: 'POST',
@@ -573,8 +533,6 @@
                 
                 const data = await response.json();
                 
-                clearTimeout(wakeupTimeout); // Clear the wake-up message
-                
                 if (data.success && data.token) {
                     jwtToken = data.token;
                     
@@ -582,14 +540,15 @@
                     localStorage.setItem('auth_token', data.token);
                     localStorage.setItem('user_info', JSON.stringify(data.user));
                     
-                    // Check if broker already configured
-                    if (data.user.broker && data.user.broker_locked) {
+                    // Check if broker already configured OR credentials already saved
+                    // Skip API configuration if either condition is true
+                    if ((data.user.broker && data.user.broker_locked) || data.user.credentials_configured) {
                         // Already configured! Go straight to dashboard
-                        showSuccess('License validated! Redirecting...');
+                        showSuccess('License validated! Redirecting to dashboard...');
                         setTimeout(() => {
-                            // Pass token in URL for cross-domain authentication
-                            const userInfo = encodeURIComponent(JSON.stringify(data.user));
-                            window.location.href = `${DASHBOARD_URL}?token=${data.token}&user=${userInfo}`;
+                            // Pass token via URL for cross-domain compatibility
+                            const encodedUser = encodeURIComponent(JSON.stringify(data.user));
+                            window.location.href = `${DASHBOARD_URL}?token=${jwtToken}&user=${encodedUser}`;
                         }, 1000);
                     } else {
                         // First time - need API configuration
@@ -604,7 +563,6 @@
                     showError(data.message || 'Invalid license key. Please check and try again.');
                 }
             } catch (error) {
-                clearTimeout(wakeupTimeout);
                 hideLoading();
                 showError('Connection error. Please check your internet and try again.');
                 console.error('License validation error:', error);
@@ -683,14 +641,12 @@
                     // Setup token refresh
                     setupTokenRefresh();
                     
-                    // Success! Redirect to dashboard with token in URL
+                    // Success! Redirect to dashboard
                     hideLoading();
                     showSuccess('✅ Setup complete! Launching dashboard...');
                     
                     setTimeout(() => {
-                        // Pass token in URL for cross-domain authentication
-                        const encodedUserInfo = encodeURIComponent(JSON.stringify(userInfo));
-                        window.location.href = `${DASHBOARD_URL}?token=${jwtToken}&user=${encodedUserInfo}`;
+                        window.location.href = DASHBOARD_URL;
                     }, 2000);
                 } else {
                     hideLoading();
@@ -712,6 +668,26 @@
             elements.apiKeyInput.value = '';
             elements.secretKeyInput.value = '';
         });
+        
+        // ===================================================================
+        // AUTO-FOCUS
+        // ===================================================================
+        
+        window.addEventListener('load', () => {
+            elements.licenseInput.focus();
+        });
+        
+        // ===================================================================
+        // CHECK IF ALREADY LOGGED IN
+        // ===================================================================
+        
+        if (localStorage.getItem('auth_token')) {
+            const userInfo = JSON.parse(localStorage.getItem('user_info') || '{}');
+            if (userInfo.broker_locked) {
+                // Already configured - redirect to dashboard
+                window.location.href = DASHBOARD_URL;
+            }
+        }
     </script>
 </body>
 </html>
