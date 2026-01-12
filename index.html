@@ -541,14 +541,11 @@
                     localStorage.setItem('user_info', JSON.stringify(data.user));
                     
                     // Check if broker already configured OR credentials already saved
-                    // Skip API configuration if either condition is true
                     if ((data.user.broker && data.user.broker_locked) || data.user.credentials_configured) {
                         // Already configured! Go straight to dashboard
                         showSuccess('License validated! Redirecting to dashboard...');
                         setTimeout(() => {
-                            // Pass token via URL for cross-domain compatibility
-                            const encodedUser = encodeURIComponent(JSON.stringify(data.user));
-                            window.location.href = `${DASHBOARD_URL}?token=${jwtToken}&user=${encodedUser}`;
+                            window.location.href = DASHBOARD_URL;
                         }, 1000);
                     } else {
                         // First time - need API configuration
