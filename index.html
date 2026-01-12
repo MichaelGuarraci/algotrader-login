@@ -675,16 +675,9 @@
         });
         
         // ===================================================================
-        // CHECK IF ALREADY LOGGED IN
+        // REMOVED AUTO-LOGIN CHECK
+        // User must enter license key every time for security
         // ===================================================================
-        
-        if (localStorage.getItem('auth_token')) {
-            const userInfo = JSON.parse(localStorage.getItem('user_info') || '{}');
-            if (userInfo.broker_locked) {
-                // Already configured - redirect to dashboard
-                window.location.href = DASHBOARD_URL;
-            }
-        }
     </script>
 </body>
 </html>
