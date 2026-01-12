@@ -601,8 +601,12 @@
                     return;
                 }
                 
+                console.log('✅ API keys validated successfully');
+                
                 // Step 2: Configure broker and create session
                 elements.loadingText.textContent = 'Creating session...';
+                
+                console.log('🔄 Calling /api/broker/configure...');
                 
                 const configResponse = await fetch(`${API_URL}/broker/configure`, {
                     method: 'POST',
@@ -618,13 +622,28 @@
                     })
                 });
                 
+                console.log('📡 Configure response status:', configResponse.status);
+                
+                if (!configResponse.ok) {
+                    const errorText = await configResponse.text();
+                    console.error('❌ Configuration failed:', errorText);
+                    hideLoading();
+                    showError(`Configuration failed: ${errorText}`);
+                    return;
+                }
+                
                 const configData = await configResponse.json();
+                console.log('📦 Configuration data:', configData);
                 
                 if (configData.success) {
                     // Store session ID (24-hour session with credentials)
                     localStorage.setItem('session_id', configData.session_id);
-                    console.log('✅ Session created:', configData.session_id);
+                    console.log('✅ Session ID stored in localStorage:', configData.session_id);
                     console.log('💰 Portfolio value:', configData.portfolio_value);
+                    
+                    // Verify it was stored
+                    const storedSessionId = localStorage.getItem('session_id');
+                    console.log('🔍 Verification - session_id in localStorage:', storedSessionId);
                     
                     // Update user info
                     const userInfo = JSON.parse(localStorage.getItem('user_info') || '{}');
@@ -639,14 +658,20 @@
                     hideLoading();
                     showSuccess(`✅ Session created! Portfolio: $${configData.portfolio_value.toFixed(2)}`);
                     
+                    console.log('⏰ Redirecting to dashboard in 2 seconds...');
+                    console.log('🎯 Dashboard URL:', DASHBOARD_URL);
+                    
                     setTimeout(() => {
+                        console.log('🚀 Redirecting NOW to:', DASHBOARD_URL);
                         window.location.href = DASHBOARD_URL;
                     }, 2000);
                 } else {
+                    console.error('❌ Configuration failed:', configData);
                     hideLoading();
                     showError(configData.error || 'Failed to create session. Please try again.');
                 }
             } catch (error) {
+                console.error('❌ Exception during configuration:', error);
                 hideLoading();
                 showError('Connection error. Please check your internet and try again.');
                 console.error('API configuration error:', error);
