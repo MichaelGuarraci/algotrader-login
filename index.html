@@ -648,14 +648,17 @@
                     const verifyToken = localStorage.getItem('auth_token');
                     console.log('🔍 Token verification:', verifyToken ? 'EXISTS' : 'MISSING');
                     
-                    // Success! Redirect to dashboard
+                    // Success! Redirect to dashboard WITH TOKEN IN URL
                     hideLoading();
                     showSuccess('✅ Setup complete! Redirecting to dashboard...');
                     
-                    console.log('🎯 Redirecting to:', DASHBOARD_URL);
+                    // Pass token in URL since localStorage doesn't work across domains
+                    const dashboardUrlWithToken = `${DASHBOARD_URL}?token=${encodeURIComponent(jwtToken)}`;
+                    console.log('🎯 Redirecting to:', dashboardUrlWithToken);
+                    
                     setTimeout(() => {
                         console.log('🚀 Redirect NOW');
-                        window.location.replace(DASHBOARD_URL);
+                        window.location.replace(dashboardUrlWithToken);
                     }, 1500);
                 } else {
                     hideLoading();
