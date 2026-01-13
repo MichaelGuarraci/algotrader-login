@@ -540,21 +540,12 @@
                     localStorage.setItem('auth_token', data.token);
                     localStorage.setItem('user_info', JSON.stringify(data.user));
                     
-                    // Check if broker already configured OR credentials already saved
-                    if ((data.user.broker && data.user.broker_locked) || data.user.credentials_configured) {
-                        // Already configured! Go straight to dashboard
-                        showSuccess('License validated! Redirecting to dashboard...');
-                        setTimeout(() => {
-                            window.location.href = DASHBOARD_URL;
-                        }, 1000);
-                    } else {
-                        // First time - need API configuration
-                        hideLoading();
-                        showSuccess('License validated! Please configure your broker.');
-                        setTimeout(() => {
-                            goToStep(2);
-                        }, 1500);
-                    }
+                    // ALWAYS go to API configuration (no smart logic!)
+                    hideLoading();
+                    showSuccess('License validated! Please configure your API keys.');
+                    setTimeout(() => {
+                        goToStep(2);
+                    }, 1000);
                 } else {
                     hideLoading();
                     showError(data.message || 'Invalid license key. Please check and try again.');
