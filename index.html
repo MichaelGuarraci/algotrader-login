@@ -629,13 +629,16 @@
                     // Setup token refresh
                     setupTokenRefresh();
                     
-                    // Success! Redirect to dashboard
+                    // Success! Redirect to dashboard WITH TOKEN IN URL
                     hideLoading();
                     showSuccess('✅ Setup complete! Launching dashboard...');
                     
+                    // Pass token in URL so dashboard can access it (cross-domain fix)
+                    const dashboardWithToken = `${DASHBOARD_URL}?token=${encodeURIComponent(jwtToken)}`;
+                    
                     setTimeout(() => {
-                        window.location.href = DASHBOARD_URL;
-                    }, 2000);
+                        window.location.href = dashboardWithToken;
+                    }, 1500);
                 } else {
                     hideLoading();
                     showError(saveData.message || 'Failed to save configuration. Please try again.');
