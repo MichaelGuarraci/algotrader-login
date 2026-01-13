@@ -523,7 +523,6 @@
             showLoading('Validating license key...');
             
             try {
-                console.log('🔑 Validating license key:', licenseKey);
                 const response = await fetch(`${API_URL}/auth/validate`, {
                     method: 'POST',
                     headers: {
@@ -532,27 +531,30 @@
                     body: JSON.stringify({ license_key: licenseKey })
                 });
                 
-                console.log('📡 License validation response status:', response.status);
                 const data = await response.json();
-                console.log('📦 License validation data:', data);
                 
                 if (data.success && data.token) {
-                    console.log('✅ License validated successfully');
                     jwtToken = data.token;
                     
                     // Store token
                     localStorage.setItem('auth_token', data.token);
                     localStorage.setItem('user_info', JSON.stringify(data.user));
-                    console.log('💾 Token and user info stored in localStorage');
                     
-                    // ALWAYS show API configuration (no skipping!)
-                    hideLoading();
-                    showSuccess('License validated! Please configure your broker.');
-                    console.log('➡️ Going to API configuration (step 2) in 1.5 seconds...');
-                    setTimeout(() => {
-                        console.log('🎯 Switching to step 2 now');
-                        goToStep(2);
-                    }, 1500);
+                    // Check if broker already configured OR credentials already saved
+                    if ((data.user.broker && data.user.broker_locked) || data.user.credentials_configured) {
+                        // Already configured! Go straight to dashboard
+                        showSuccess('License validated! Redirecting to dashboard...');
+                        setTimeout(() => {
+                            window.location.href = DASHBOARD_URL;
+                        }, 1000);
+                    } else {
+                        // First time - need API configuration
+                        hideLoading();
+                        showSuccess('License validated! Please configure your broker.');
+                        setTimeout(() => {
+                            goToStep(2);
+                        }, 1500);
+                    }
                 } else {
                     hideLoading();
                     showError(data.message || 'Invalid license key. Please check and try again.');
@@ -610,12 +612,6 @@
                 // Step 2: Save configuration
                 elements.loadingText.textContent = 'Saving configuration...';
                 
-                console.log('✅ API keys validated successfully');
-                
-                // Step 2: Save configuration
-                elements.loadingText.textContent = 'Saving configuration...';
-                
-                console.log('💾 Saving configuration to backend...');
                 const saveResponse = await fetch(`${API_URL}/broker/select`, {
                     method: 'POST',
                     headers: {
@@ -630,13 +626,9 @@
                     })
                 });
                 
-                console.log('📡 Save response status:', saveResponse.status);
                 const saveData = await saveResponse.json();
-                console.log('📦 Save response data:', saveData);
                 
                 if (saveData.success) {
-                    console.log('✅ Configuration saved successfully');
-                    
                     // Update user info
                     const userInfo = JSON.parse(localStorage.getItem('user_info') || '{}');
                     userInfo.broker = broker;
@@ -646,50 +638,18 @@
                     // Setup token refresh
                     setupTokenRefresh();
                     
-                    // VERIFY localStorage before redirect
-                    const verifyToken = localStorage.getItem('auth_token');
-                    const verifyUser = localStorage.getItem('user_info');
-                    console.log('🔍 Verification before redirect:');
-                    console.log('  - auth_token exists:', !!verifyToken);
-                    console.log('  - user_info exists:', !!verifyUser);
-                    console.log('  - auth_token length:', verifyToken ? verifyToken.length : 0);
-                    
-                    if (!verifyToken) {
-                        console.error('❌ CRITICAL: auth_token not in localStorage!');
-                        showError('Session error. Please refresh and try again.');
-                        return;
-                    }
-                    
-                    // Success! Redirect immediately
+                    // Success! Redirect to dashboard
                     hideLoading();
-                    showSuccess('✅ Setup complete! Redirecting to dashboard...');
+                    showSuccess('✅ Setup complete! Launching dashboard...');
                     
-                    // Show manual redirect link as backup
-                    const successDiv = document.getElementById('success-message');
-                    successDiv.innerHTML = `
-                        ✅ Setup complete!<br>
-                        <a href="${DASHBOARD_URL}" style="color: white; text-decoration: underline; font-weight: bold;">
-                            Click here if you're not automatically redirected →
-                        </a>
-                    `;
-                    
-                    console.log('🎯 Redirecting to:', DASHBOARD_URL);
-                    
-                    // Small delay to ensure localStorage is fully written
                     setTimeout(() => {
-                        console.log('🚀 Executing redirect NOW...');
-                        // Verify one more time right before redirect
-                        const finalCheck = localStorage.getItem('auth_token');
-                        console.log('  - Final auth_token check:', !!finalCheck);
-                        window.location.replace(DASHBOARD_URL);
-                    }, 150);
+                        window.location.href = DASHBOARD_URL;
+                    }, 2000);
                 } else {
-                    console.error('❌ Configuration save failed:', saveData);
                     hideLoading();
                     showError(saveData.message || 'Failed to save configuration. Please try again.');
                 }
             } catch (error) {
-                console.error('❌ API configuration error:', error);
                 hideLoading();
                 showError('Connection error. Please check your internet and try again.');
                 console.error('API configuration error:', error);
