@@ -540,17 +540,21 @@
                     localStorage.setItem('auth_token', data.token);
                     localStorage.setItem('user_info', JSON.stringify(data.user));
                     
-                    console.log('✅ License validated');
-                    console.log('📝 Token stored:', data.token.substring(0, 30) + '...');
-                    
-                    // ALWAYS go to API configuration (no smart logic!)
-                    hideLoading();
-                    showSuccess('License validated! Please configure your API keys.');
-                    
-                    console.log('➡️ Going to step 2 (API config)');
-                    setTimeout(() => {
-                        goToStep(2);
-                    }, 1000);
+                    // Check if broker already configured OR credentials already saved
+                    if ((data.user.broker && data.user.broker_locked) || data.user.credentials_configured) {
+                        // Already configured! Go straight to dashboard
+                        showSuccess('License validated! Redirecting to dashboard...');
+                        setTimeout(() => {
+                            window.location.href = DASHBOARD_URL;
+                        }, 1000);
+                    } else {
+                        // First time - need API configuration
+                        hideLoading();
+                        showSuccess('License validated! Please configure your broker.');
+                        setTimeout(() => {
+                            goToStep(2);
+                        }, 1500);
+                    }
                 } else {
                     hideLoading();
                     showError(data.message || 'Invalid license key. Please check and try again.');
@@ -608,12 +612,6 @@
                 // Step 2: Save configuration
                 elements.loadingText.textContent = 'Saving configuration...';
                 
-                console.log('✅ API keys validated');
-                
-                // Step 2: Save configuration
-                elements.loadingText.textContent = 'Saving configuration...';
-                
-                console.log('💾 Saving to backend...');
                 const saveResponse = await fetch(`${API_URL}/broker/select`, {
                     method: 'POST',
                     headers: {
@@ -628,13 +626,9 @@
                     })
                 });
                 
-                console.log('📡 Save response:', saveResponse.status);
                 const saveData = await saveResponse.json();
-                console.log('📦 Save data:', saveData);
                 
                 if (saveData.success) {
-                    console.log('✅ Configuration saved!');
-                    
                     // Update user info
                     const userInfo = JSON.parse(localStorage.getItem('user_info') || '{}');
                     userInfo.broker = broker;
@@ -644,22 +638,13 @@
                     // Setup token refresh
                     setupTokenRefresh();
                     
-                    // Verify token is in localStorage
-                    const verifyToken = localStorage.getItem('auth_token');
-                    console.log('🔍 Token verification:', verifyToken ? 'EXISTS' : 'MISSING');
-                    
-                    // Success! Redirect to dashboard WITH TOKEN IN URL
+                    // Success! Redirect to dashboard
                     hideLoading();
-                    showSuccess('✅ Setup complete! Redirecting to dashboard...');
-                    
-                    // Pass token in URL since localStorage doesn't work across domains
-                    const dashboardUrlWithToken = `${DASHBOARD_URL}?token=${encodeURIComponent(jwtToken)}`;
-                    console.log('🎯 Redirecting to:', dashboardUrlWithToken);
+                    showSuccess('✅ Setup complete! Launching dashboard...');
                     
                     setTimeout(() => {
-                        console.log('🚀 Redirect NOW');
-                        window.location.replace(dashboardUrlWithToken);
-                    }, 1500);
+                        window.location.href = DASHBOARD_URL;
+                    }, 2000);
                 } else {
                     hideLoading();
                     showError(saveData.message || 'Failed to save configuration. Please try again.');
@@ -682,39 +667,11 @@
         });
         
         // ===================================================================
-        // KEEP-ALIVE: KEEP BACKEND AWAKE
-        // ===================================================================
-        
-        // Wake up backend immediately on page load
-        async function wakeUpBackend() {
-            try {
-                await fetch(`${API_URL}/health`);
-                console.log('✅ Backend wake-up ping sent');
-            } catch (error) {
-                console.log('⚠️ Backend wake-up failed (might still be waking):', error);
-            }
-        }
-        
-        // Keep backend awake with aggressive pings every 2 minutes
-        function startKeepAlive() {
-            setInterval(async () => {
-                try {
-                    await fetch(`${API_URL}/health`);
-                    console.log('💓 Keep-alive ping sent (every 2 minutes)');
-                } catch (error) {
-                    console.log('⚠️ Keep-alive ping failed:', error);
-                }
-            }, 2 * 60 * 1000); // 2 minutes
-        }
-        
-        // ===================================================================
-        // AUTO-FOCUS & PAGE LOAD
+        // AUTO-FOCUS
         // ===================================================================
         
         window.addEventListener('load', () => {
             elements.licenseInput.focus();
-            wakeUpBackend();      // Wake up backend immediately
-            startKeepAlive();     // Start keep-alive pings
         });
         
         // ===================================================================
