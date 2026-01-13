@@ -540,21 +540,17 @@
                     localStorage.setItem('auth_token', data.token);
                     localStorage.setItem('user_info', JSON.stringify(data.user));
                     
-                    // Check if broker already configured OR credentials already saved
-                    if ((data.user.broker && data.user.broker_locked) || data.user.credentials_configured) {
-                        // Already configured! Go straight to dashboard
-                        showSuccess('License validated! Redirecting to dashboard...');
-                        setTimeout(() => {
-                            window.location.href = DASHBOARD_URL;
-                        }, 1000);
-                    } else {
-                        // First time - need API configuration
-                        hideLoading();
-                        showSuccess('License validated! Please configure your broker.');
-                        setTimeout(() => {
-                            goToStep(2);
-                        }, 1500);
-                    }
+                    console.log('✅ License validated');
+                    console.log('📝 Token stored:', data.token.substring(0, 30) + '...');
+                    
+                    // ALWAYS go to API configuration (no smart logic!)
+                    hideLoading();
+                    showSuccess('License validated! Please configure your API keys.');
+                    
+                    console.log('➡️ Going to step 2 (API config)');
+                    setTimeout(() => {
+                        goToStep(2);
+                    }, 1000);
                 } else {
                     hideLoading();
                     showError(data.message || 'Invalid license key. Please check and try again.');
@@ -612,6 +608,12 @@
                 // Step 2: Save configuration
                 elements.loadingText.textContent = 'Saving configuration...';
                 
+                console.log('✅ API keys validated');
+                
+                // Step 2: Save configuration
+                elements.loadingText.textContent = 'Saving configuration...';
+                
+                console.log('💾 Saving to backend...');
                 const saveResponse = await fetch(`${API_URL}/broker/select`, {
                     method: 'POST',
                     headers: {
@@ -626,9 +628,13 @@
                     })
                 });
                 
+                console.log('📡 Save response:', saveResponse.status);
                 const saveData = await saveResponse.json();
+                console.log('📦 Save data:', saveData);
                 
                 if (saveData.success) {
+                    console.log('✅ Configuration saved!');
+                    
                     // Update user info
                     const userInfo = JSON.parse(localStorage.getItem('user_info') || '{}');
                     userInfo.broker = broker;
@@ -638,13 +644,19 @@
                     // Setup token refresh
                     setupTokenRefresh();
                     
+                    // Verify token is in localStorage
+                    const verifyToken = localStorage.getItem('auth_token');
+                    console.log('🔍 Token verification:', verifyToken ? 'EXISTS' : 'MISSING');
+                    
                     // Success! Redirect to dashboard
                     hideLoading();
-                    showSuccess('✅ Setup complete! Launching dashboard...');
+                    showSuccess('✅ Setup complete! Redirecting to dashboard...');
                     
+                    console.log('🎯 Redirecting to:', DASHBOARD_URL);
                     setTimeout(() => {
-                        window.location.href = DASHBOARD_URL;
-                    }, 2000);
+                        console.log('🚀 Redirect NOW');
+                        window.location.replace(DASHBOARD_URL);
+                    }, 1500);
                 } else {
                     hideLoading();
                     showError(saveData.message || 'Failed to save configuration. Please try again.');
