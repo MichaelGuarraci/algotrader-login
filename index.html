@@ -646,15 +646,43 @@
                     // Setup token refresh
                     setupTokenRefresh();
                     
-                    // Success! Redirect to dashboard
-                    hideLoading();
-                    showSuccess('✅ Setup complete! Launching dashboard...');
+                    // VERIFY localStorage before redirect
+                    const verifyToken = localStorage.getItem('auth_token');
+                    const verifyUser = localStorage.getItem('user_info');
+                    console.log('🔍 Verification before redirect:');
+                    console.log('  - auth_token exists:', !!verifyToken);
+                    console.log('  - user_info exists:', !!verifyUser);
+                    console.log('  - auth_token length:', verifyToken ? verifyToken.length : 0);
                     
-                    console.log('🚀 Redirecting to dashboard in 2 seconds...');
+                    if (!verifyToken) {
+                        console.error('❌ CRITICAL: auth_token not in localStorage!');
+                        showError('Session error. Please refresh and try again.');
+                        return;
+                    }
+                    
+                    // Success! Redirect immediately
+                    hideLoading();
+                    showSuccess('✅ Setup complete! Redirecting to dashboard...');
+                    
+                    // Show manual redirect link as backup
+                    const successDiv = document.getElementById('success-message');
+                    successDiv.innerHTML = `
+                        ✅ Setup complete!<br>
+                        <a href="${DASHBOARD_URL}" style="color: white; text-decoration: underline; font-weight: bold;">
+                            Click here if you're not automatically redirected →
+                        </a>
+                    `;
+                    
+                    console.log('🎯 Redirecting to:', DASHBOARD_URL);
+                    
+                    // Small delay to ensure localStorage is fully written
                     setTimeout(() => {
-                        console.log('🎯 Redirecting NOW to:', DASHBOARD_URL);
-                        window.location.href = DASHBOARD_URL;
-                    }, 2000);
+                        console.log('🚀 Executing redirect NOW...');
+                        // Verify one more time right before redirect
+                        const finalCheck = localStorage.getItem('auth_token');
+                        console.log('  - Final auth_token check:', !!finalCheck);
+                        window.location.replace(DASHBOARD_URL);
+                    }, 150);
                 } else {
                     console.error('❌ Configuration save failed:', saveData);
                     hideLoading();
