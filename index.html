@@ -329,6 +329,16 @@
                 </div>
                 
                 <div class="form-group">
+                    <label for="polygon-key">Polygon.io API Key (Free)</label>
+                    <input 
+                        type="text" 
+                        id="polygon-key"
+                        placeholder="Your Polygon API key"
+                        required>
+                    <div class="help-text">Get your FREE key from <a href="https://polygon.io/dashboard" target="_blank" style="color: #667eea;">polygon.io/dashboard</a></div>
+                </div>
+                
+                <div class="form-group">
                     <div class="checkbox-group">
                         <input 
                             type="checkbox" 
@@ -395,6 +405,7 @@
             brokerSelect: document.getElementById('broker'),
             apiKeyInput: document.getElementById('api-key'),
             secretKeyInput: document.getElementById('secret-key'),
+            polygonKeyInput: document.getElementById('polygon-key'),
             paperTradingCheckbox: document.getElementById('paper-trading'),
             
             // Sections
@@ -567,10 +578,11 @@
             const broker = elements.brokerSelect.value;
             const apiKey = elements.apiKeyInput.value.trim();
             const secretKey = elements.secretKeyInput.value.trim();
+            const polygonKey = elements.polygonKeyInput.value.trim();
             const paperTrading = elements.paperTradingCheckbox.checked;
             
-            if (!apiKey || !secretKey) {
-                showError('Please enter both API key and secret key');
+            if (!apiKey || !secretKey || !polygonKey) {
+                showError('Please enter all required API keys (Alpaca API, Alpaca Secret, and Polygon)');
                 return;
             }
             
@@ -588,6 +600,7 @@
                         broker,
                         api_key: apiKey,
                         secret_key: secretKey,
+                        polygon_key: polygonKey,
                         paper_trading: paperTrading
                     })
                 });
@@ -613,6 +626,7 @@
                         broker,
                         api_key: apiKey,
                         secret_key: secretKey,
+                        polygon_key: polygonKey,
                         paper_trading: paperTrading
                     })
                 });
@@ -658,6 +672,7 @@
             goToStep(1);
             elements.apiKeyInput.value = '';
             elements.secretKeyInput.value = '';
+            elements.polygonKeyInput.value = '';
         });
         
         // ===================================================================
