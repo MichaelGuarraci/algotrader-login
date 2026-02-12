@@ -237,6 +237,57 @@
             margin-top: 5px;
         }
         
+        .disclaimer-box {
+            background: #fff3cd;
+            border: 2px solid #ff6b6b;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        
+        .disclaimer-box h3 {
+            color: #d63031;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1em;
+        }
+        
+        .disclaimer-box p {
+            color: #333;
+            line-height: 1.6;
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+        
+        .disclaimer-box strong {
+            color: #d63031;
+        }
+        
+        .terms-checkbox {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .terms-checkbox label {
+            display: flex;
+            align-items: start;
+            gap: 10px;
+            cursor: pointer;
+            font-weight: normal;
+            font-size: 0.9em;
+        }
+        
+        .terms-checkbox input[type="checkbox"] {
+            width: auto;
+            margin-top: 4px;
+            cursor: pointer;
+            min-width: 18px;
+            height: 18px;
+        }
+        
         @media (max-width: 600px) {
             .setup-container {
                 padding: 30px 20px;
@@ -277,6 +328,43 @@
                         required
                         autocomplete="off">
                     <div class="help-text">Find this in your beta invitation email</div>
+                </div>
+                
+                <!-- LEGAL DISCLAIMER - REQUIRED -->
+                <div class="disclaimer-box">
+                    <h3>
+                        <span style="font-size: 24px;">⚠️</span>
+                        TRADING RISK DISCLOSURE
+                    </h3>
+                    
+                    <p>
+                        <strong>Trading involves substantial risk of loss.</strong> You could lose some or all of your investment. 
+                        Past performance does not guarantee future results.
+                    </p>
+                    
+                    <p>
+                        This software is NOT financial advice. We are NOT registered investment advisors. 
+                        You are solely responsible for all trading decisions and outcomes.
+                    </p>
+                    
+                    <p style="font-size: 0.85em; opacity: 0.9;">
+                        By using this service, you acknowledge that you understand the risks and will not hold 
+                        AlgoTrader Pro liable for any losses.
+                    </p>
+                    
+                    <div class="terms-checkbox">
+                        <label>
+                            <input 
+                                type="checkbox" 
+                                id="accept-terms" 
+                                required
+                            />
+                            <span>
+                                I have read and agree to the Terms of Service, Risk Disclosure, and Privacy Policy. 
+                                I understand trading involves substantial risk of loss.
+                            </span>
+                        </label>
+                    </div>
                 </div>
                 
                 <button type="submit" class="button" id="license-submit">
@@ -390,6 +478,10 @@
         let currentStep = 1;
         let jwtToken = null;
         let licenseKey = null;
+        
+        // Get returnTo parameter from URL (for dev/prod redirect)
+        const urlParams = new URLSearchParams(window.location.search);
+        const returnTo = urlParams.get('returnTo');
         
         // ===================================================================
         // DOM ELEMENTS
@@ -647,8 +739,17 @@
                     hideLoading();
                     showSuccess('✅ Setup complete! Launching dashboard...');
                     
-                    // Pass token in URL so dashboard can access it (cross-domain fix)
-                    const dashboardWithToken = `${DASHBOARD_URL}?token=${encodeURIComponent(jwtToken)}`;
+                    // Redirect to returnTo URL (dev/prod) or default to production
+                    let dashboardWithToken;
+                    if (returnTo) {
+                        // User came from specific dashboard (dev or prod) - send them back
+                        const url = new URL(returnTo);
+                        url.searchParams.set('token', jwtToken);
+                        dashboardWithToken = url.toString();
+                    } else {
+                        // No returnTo - default to production dashboard
+                        dashboardWithToken = `${DASHBOARD_URL}?token=${encodeURIComponent(jwtToken)}`;
+                    }
                     
                     setTimeout(() => {
                         window.location.href = dashboardWithToken;
@@ -673,6 +774,31 @@
             elements.apiKeyInput.value = '';
             elements.secretKeyInput.value = '';
             elements.polygonKeyInput.value = '';
+        });
+        
+        // ===================================================================
+        // TERMS CHECKBOX ENFORCEMENT
+        // ===================================================================
+        
+        const termsCheckbox = document.getElementById('accept-terms');
+        const licenseSubmit = document.getElementById('license-submit');
+        
+        // Initially disable submit button
+        licenseSubmit.disabled = true;
+        licenseSubmit.style.opacity = '0.5';
+        licenseSubmit.style.cursor = 'not-allowed';
+        
+        // Enable button when checkbox is checked
+        termsCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                licenseSubmit.disabled = false;
+                licenseSubmit.style.opacity = '1';
+                licenseSubmit.style.cursor = 'pointer';
+            } else {
+                licenseSubmit.disabled = true;
+                licenseSubmit.style.opacity = '0.5';
+                licenseSubmit.style.cursor = 'not-allowed';
+            }
         });
         
         // ===================================================================
