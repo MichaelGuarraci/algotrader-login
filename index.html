@@ -638,12 +638,32 @@
                 
                 if (data.success && data.token) {
                     jwtToken = data.token;
-                    
+
                     // Store token
                     sessionStorage.setItem('auth_token', data.token);
                     sessionStorage.setItem('user_info', JSON.stringify(data.user));
-                    
-                    // ALWAYS go to API configuration (no smart logic!)
+
+                    // If broker already configured, skip setup and go straight to dashboard
+                    if (data.user && data.user.broker && data.user.broker_locked) {
+                        hideLoading();
+                        showSuccess('✅ License validated! Launching dashboard...');
+
+                        let dashboardWithToken;
+                        if (returnTo) {
+                            const url = new URL(returnTo);
+                            url.searchParams.set('token', jwtToken);
+                            dashboardWithToken = url.toString();
+                        } else {
+                            dashboardWithToken = `${DASHBOARD_URL}?token=${encodeURIComponent(jwtToken)}`;
+                        }
+
+                        setTimeout(() => {
+                            window.location.href = dashboardWithToken;
+                        }, 1000);
+                        return;
+                    }
+
+                    // First time setup — go to API configuration
                     hideLoading();
                     showSuccess('License validated! Please configure your API keys.');
                     setTimeout(() => {
