@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlgoTrader Pro - Setup</title>
+    <title>AlgoTrader Pro - Login</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -20,21 +20,21 @@
             justify-content: center;
             padding: 20px;
         }
-        
+
         .setup-container {
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             padding: 50px;
-            max-width: 550px;
+            max-width: 500px;
             width: 100%;
         }
-        
+
         .logo {
             text-align: center;
             margin-bottom: 30px;
         }
-        
+
         .logo h1 {
             font-size: 2.5em;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -42,43 +42,16 @@
             -webkit-text-fill-color: transparent;
             margin-bottom: 10px;
         }
-        
+
         .logo p {
             color: #666;
             font-size: 1.1em;
         }
-        
-        .step-indicator {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-            gap: 10px;
-        }
-        
-        .step {
-            width: 40px;
-            height: 4px;
-            background: #e0e0e0;
-            border-radius: 2px;
-            transition: background 0.3s;
-        }
-        
-        .step.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        
-        .form-section {
-            display: none;
-        }
-        
-        .form-section.active {
-            display: block;
-        }
-        
+
         .form-group {
             margin-bottom: 25px;
         }
-        
+
         label {
             display: block;
             color: #333;
@@ -86,48 +59,23 @@
             margin-bottom: 8px;
             font-size: 0.95em;
         }
-        
-        input, select {
+
+        input[type="text"] {
             width: 100%;
             padding: 15px;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
             font-size: 1em;
-            transition: border-color 0.3s;
-        }
-        
-        input[type="text"], input[type="password"] {
             font-family: 'Courier New', monospace;
             letter-spacing: 1px;
+            transition: border-color 0.3s;
         }
-        
-        input:focus, select:focus {
+
+        input[type="text"]:focus {
             outline: none;
             border-color: #667eea;
         }
-        
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-        }
-        
-        .checkbox-group input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            margin-right: 12px;
-            cursor: pointer;
-        }
-        
-        .checkbox-group label {
-            margin: 0;
-            cursor: pointer;
-            font-weight: 500;
-            color: #333;
-        }
-        
+
         .button {
             width: 100%;
             padding: 15px;
@@ -140,28 +88,21 @@
             cursor: pointer;
             transition: transform 0.3s;
         }
-        
+
         .button:hover {
             transform: translateY(-2px);
         }
-        
+
         .button:active {
             transform: translateY(0);
         }
-        
+
         .button:disabled {
-            opacity: 0.6;
+            opacity: 0.5;
             cursor: not-allowed;
             transform: none;
         }
-        
-        .button-secondary {
-            background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
-            margin-top: 10px;
-        }
-        
+
         .error-message {
             background: #f8d7da;
             color: #721c24;
@@ -171,7 +112,7 @@
             border-left: 4px solid #dc3545;
             display: none;
         }
-        
+
         .success-message {
             background: #d4edda;
             color: #155724;
@@ -181,7 +122,7 @@
             border-left: 4px solid #28a745;
             display: none;
         }
-        
+
         .info-message {
             background: #d1ecf1;
             color: #0c5460;
@@ -191,24 +132,65 @@
             border-left: 4px solid #17a2b8;
             font-size: 0.9em;
         }
-        
-        .warning-message {
+
+        .disclaimer-box {
             background: #fff3cd;
-            color: #856404;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px 0;
-            border-left: 4px solid #ffc107;
-            font-size: 0.95em;
+            border: 2px solid #ff6b6b;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
         }
-        
+
+        .disclaimer-box h3 {
+            color: #d63031;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1em;
+        }
+
+        .disclaimer-box p {
+            color: #333;
+            line-height: 1.6;
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+
+        .disclaimer-box strong {
+            color: #d63031;
+        }
+
+        .terms-checkbox {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+
+        .terms-checkbox label {
+            display: flex;
+            align-items: start;
+            gap: 10px;
+            cursor: pointer;
+            font-weight: normal;
+            font-size: 0.9em;
+        }
+
+        .terms-checkbox input[type="checkbox"] {
+            width: auto;
+            margin-top: 4px;
+            cursor: pointer;
+            min-width: 18px;
+            height: 18px;
+        }
+
         .loading {
             display: none;
             text-align: center;
             color: #667eea;
             margin: 20px 0;
         }
-        
+
         .spinner {
             border: 3px solid #f3f3f3;
             border-top: 3px solid #667eea;
@@ -218,81 +200,30 @@
             animation: spin 1s linear infinite;
             margin: 20px auto;
         }
-        
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
+
         .footer {
             text-align: center;
             margin-top: 30px;
             color: #666;
             font-size: 0.9em;
         }
-        
+
         .help-text {
             font-size: 0.85em;
             color: #666;
             margin-top: 5px;
         }
-        
-        .disclaimer-box {
-            background: #fff3cd;
-            border: 2px solid #ff6b6b;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 25px 0;
-        }
-        
-        .disclaimer-box h3 {
-            color: #d63031;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 1.1em;
-        }
-        
-        .disclaimer-box p {
-            color: #333;
-            line-height: 1.6;
-            margin: 10px 0;
-            font-size: 0.9em;
-        }
-        
-        .disclaimer-box strong {
-            color: #d63031;
-        }
-        
-        .terms-checkbox {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #ddd;
-        }
-        
-        .terms-checkbox label {
-            display: flex;
-            align-items: start;
-            gap: 10px;
-            cursor: pointer;
-            font-weight: normal;
-            font-size: 0.9em;
-        }
-        
-        .terms-checkbox input[type="checkbox"] {
-            width: auto;
-            margin-top: 4px;
-            cursor: pointer;
-            min-width: 18px;
-            height: 18px;
-        }
-        
+
         @media (max-width: 600px) {
             .setup-container {
                 padding: 30px 20px;
             }
-            
+
             .logo h1 {
                 font-size: 2em;
             }
@@ -303,536 +234,164 @@
     <div class="setup-container">
         <div class="logo">
             <h1>🚀 AlgoTrader Pro</h1>
-            <p>One-Time Setup</p>
+            <p>Sign in to your account</p>
         </div>
-        
-        <div class="step-indicator">
-            <div class="step active" id="step1-indicator"></div>
-            <div class="step" id="step2-indicator"></div>
-        </div>
-        
+
         <div id="error-message" class="error-message"></div>
         <div id="success-message" class="success-message"></div>
-        
-        <!-- STEP 1: LICENSE KEY -->
-        <div id="step1" class="form-section active">
-            <h2 style="margin-bottom: 20px; color: #333;">Step 1: License Key</h2>
-            
-            <form id="license-form">
-                <div class="form-group">
-                    <label for="license-key">Enter Your Beta License Key</label>
-                    <input 
-                        type="text" 
-                        id="license-key" 
-                        placeholder="BETA-TEST-XXX"
-                        required
-                        autocomplete="off">
-                    <div class="help-text">Find this in your beta invitation email</div>
-                </div>
-                
-                <!-- LEGAL DISCLAIMER - REQUIRED -->
-                <div class="disclaimer-box">
-                    <h3>
-                        <span style="font-size: 24px;">⚠️</span>
-                        TRADING RISK DISCLOSURE
-                    </h3>
-                    
-                    <p>
-                        <strong>Trading involves substantial risk of loss.</strong> You could lose some or all of your investment. 
-                        Past performance does not guarantee future results.
-                    </p>
-                    
-                    <p>
-                        This software is NOT financial advice. We are NOT registered investment advisors. 
-                        You are solely responsible for all trading decisions and outcomes.
-                    </p>
-                    
-                    <p style="font-size: 0.85em; opacity: 0.9;">
-                        By using this service, you acknowledge that you understand the risks and will not hold 
-                        AlgoTrader Pro liable for any losses.
-                    </p>
-                    
-                    <div class="terms-checkbox">
-                        <label>
-                            <input 
-                                type="checkbox" 
-                                id="accept-terms" 
-                                required
-                            />
-                            <span>
-                                I have read and agree to the Terms of Service, Risk Disclosure, and Privacy Policy. 
-                                I understand trading involves substantial risk of loss.
-                            </span>
-                        </label>
-                    </div>
-                </div>
-                
-                <button type="submit" class="button" id="license-submit">
-                    Continue to API Setup →
-                </button>
-            </form>
-            
-            <div class="info-message">
-                <strong>📧 Need help?</strong><br>
-                Contact your beta program administrator if you don't have a license key.
+
+        <form id="license-form">
+            <div class="form-group">
+                <label for="license-key">License Key</label>
+                <input
+                    type="text"
+                    id="license-key"
+                    placeholder="BETA-TEST-XXX"
+                    required
+                    autocomplete="off">
+                <div class="help-text">Find this in your beta invitation email</div>
             </div>
-        </div>
-        
-        <!-- STEP 2: API CONFIGURATION -->
-        <div id="step2" class="form-section">
-            <h2 style="margin-bottom: 20px; color: #333;">Step 2: Connect Broker</h2>
-            
-            <div class="warning-message">
-                <strong>⚠️ Important:</strong> This can only be done ONCE and cannot be changed! Your broker selection is permanent for security reasons.
+
+            <!-- LEGAL DISCLAIMER -->
+            <div class="disclaimer-box">
+                <h3>
+                    <span style="font-size: 24px;">⚠️</span>
+                    TRADING RISK DISCLOSURE
+                </h3>
+                <p>
+                    <strong>Trading involves substantial risk of loss.</strong> You could lose some or all of your investment.
+                    Past performance does not guarantee future results.
+                </p>
+                <p>
+                    This software is NOT financial advice. We are NOT registered investment advisors.
+                    You are solely responsible for all trading decisions and outcomes.
+                </p>
+                <p style="font-size: 0.85em; opacity: 0.9;">
+                    By using this service, you acknowledge that you understand the risks and will not hold
+                    AlgoTrader Pro liable for any losses.
+                </p>
+                <div class="terms-checkbox">
+                    <label>
+                        <input type="checkbox" id="accept-terms" required />
+                        <span>
+                            I have read and agree to the Terms of Service, Risk Disclosure, and Privacy Policy.
+                            I understand trading involves substantial risk of loss.
+                        </span>
+                    </label>
+                </div>
             </div>
-            
-            <form id="api-form">
-                <div class="form-group">
-                    <label for="broker">Select Broker</label>
-                    <select id="broker" required>
-                        <option value="alpaca">Alpaca (Recommended)</option>
-                        <option value="schwab" disabled>TD Ameritrade/Schwab (Coming Soon)</option>
-                        <option value="ibkr" disabled>Interactive Brokers (Coming Soon)</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="api-key">Alpaca API Key</label>
-                    <input 
-                        type="text" 
-                        id="api-key"
-                        placeholder="PKXXXXXXXXXXXXXXXX"
-                        required>
-                    <div class="help-text">Found in your Alpaca dashboard under API Keys</div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="secret-key">Alpaca Secret Key</label>
-                    <input 
-                        type="password" 
-                        id="secret-key"
-                        placeholder="Enter your secret key"
-                        required>
-                    <div class="help-text">Keep this secret! Never share with anyone.</div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="polygon-key">Polygon.io API Key (Free)</label>
-                    <input 
-                        type="text" 
-                        id="polygon-key"
-                        placeholder="Your Polygon API key"
-                        required>
-                    <div class="help-text">Get your FREE key from <a href="https://polygon.io/dashboard" target="_blank" style="color: #667eea;">polygon.io/dashboard</a></div>
-                </div>
-                
-                <div class="form-group">
-                    <div class="checkbox-group">
-                        <input 
-                            type="checkbox" 
-                            id="paper-trading"
-                            checked>
-                        <label for="paper-trading">
-                            ☑️ Use Paper Trading (Recommended - no real money!)
-                        </label>
-                    </div>
-                </div>
-                
-                <button type="submit" class="button" id="api-submit">
-                    🚀 Complete Setup & Launch Dashboard
-                </button>
-                
-                <button type="button" class="button button-secondary" id="back-button">
-                    ← Back to License
-                </button>
-            </form>
-            
-            <div class="info-message">
-                <strong>Don't have API keys?</strong><br>
-                <a href="https://alpaca.markets" target="_blank" style="color: #17a2b8; font-weight: bold;">Sign up at alpaca.markets</a> - Paper trading is FREE!
-            </div>
-        </div>
-        
+
+            <button type="submit" class="button" id="license-submit" disabled>
+                Launch Dashboard →
+            </button>
+        </form>
+
         <div id="loading" class="loading">
             <div class="spinner"></div>
             <p id="loading-text">Validating...</p>
         </div>
-        
+
+        <div class="info-message">
+            <strong>📧 Need help?</strong><br>
+            Contact your beta program administrator if you don't have a license key.
+        </div>
+
         <div class="footer">
             <p>© 2025 AlgoTrader Pro. All rights reserved.</p>
         </div>
     </div>
 
     <script>
-        // ===================================================================
-        // CONFIGURATION
-        // ===================================================================
-        
         const API_URL = 'https://algotrader-backend.onrender.com/api';
         const DASHBOARD_URL = 'https://algotrader-frontend2.vercel.app';
-        
-        // ===================================================================
-        // STATE MANAGEMENT
-        // ===================================================================
-        
-        let currentStep = 1;
-        let jwtToken = null;
-        let licenseKey = null;
-        
-        // Get returnTo parameter from URL (for dev/prod redirect)
+
         const urlParams = new URLSearchParams(window.location.search);
         const returnTo = urlParams.get('returnTo');
-        
-        // ===================================================================
-        // DOM ELEMENTS
-        // ===================================================================
-        
-        const elements = {
-            // Forms
-            licenseForm: document.getElementById('license-form'),
-            apiForm: document.getElementById('api-form'),
-            
-            // Inputs
-            licenseInput: document.getElementById('license-key'),
-            brokerSelect: document.getElementById('broker'),
-            apiKeyInput: document.getElementById('api-key'),
-            secretKeyInput: document.getElementById('secret-key'),
-            polygonKeyInput: document.getElementById('polygon-key'),
-            paperTradingCheckbox: document.getElementById('paper-trading'),
-            
-            // Sections
-            step1: document.getElementById('step1'),
-            step2: document.getElementById('step2'),
-            
-            // Indicators
-            step1Indicator: document.getElementById('step1-indicator'),
-            step2Indicator: document.getElementById('step2-indicator'),
-            
-            // Messages
-            errorMessage: document.getElementById('error-message'),
-            successMessage: document.getElementById('success-message'),
-            loading: document.getElementById('loading'),
-            loadingText: document.getElementById('loading-text'),
-            
-            // Buttons
-            backButton: document.getElementById('back-button')
-        };
-        
-        // ===================================================================
-        // TOKEN REFRESH SYSTEM
-        // ===================================================================
-        
-        function setupTokenRefresh() {
-            // Refresh token every 20 hours (tokens expire in 24 hours)
-            setInterval(async () => {
-                const token = sessionStorage.getItem('auth_token');
-                if (token) {
-                    try {
-                        const response = await fetch(`${API_URL}/auth/refresh`, {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': `Bearer ${token}`,
-                                'Content-Type': 'application/json'
-                            }
-                        });
-                        
-                        if (response.ok) {
-                            const data = await response.json();
-                            if (data.token) {
-                                sessionStorage.setItem('auth_token', data.token);
-                                console.log('Token refreshed successfully');
-                            }
-                        }
-                    } catch (error) {
-                        console.error('Token refresh failed:', error);
-                    }
-                }
-            }, 20 * 60 * 60 * 1000); // 20 hours
+
+        const errorMessage  = document.getElementById('error-message');
+        const successMessage = document.getElementById('success-message');
+        const loading       = document.getElementById('loading');
+        const loadingText   = document.getElementById('loading-text');
+        const licenseSubmit = document.getElementById('license-submit');
+        const termsCheckbox = document.getElementById('accept-terms');
+
+        // Enable submit only when terms are accepted
+        termsCheckbox.addEventListener('change', function () {
+            licenseSubmit.disabled = !this.checked;
+        });
+
+        function showError(msg) {
+            errorMessage.textContent = msg;
+            errorMessage.style.display = 'block';
+            successMessage.style.display = 'none';
+            loading.style.display = 'none';
         }
-        
-        // ===================================================================
-        // STEP NAVIGATION
-        // ===================================================================
-        
-        function goToStep(step) {
-            // Hide all sections
-            elements.step1.classList.remove('active');
-            elements.step2.classList.remove('active');
-            
-            // Update indicators
-            elements.step1Indicator.classList.remove('active');
-            elements.step2Indicator.classList.remove('active');
-            
-            // Show correct section
-            if (step === 1) {
-                elements.step1.classList.add('active');
-                elements.step1Indicator.classList.add('active');
-            } else if (step === 2) {
-                elements.step2.classList.add('active');
-                elements.step1Indicator.classList.add('active');
-                elements.step2Indicator.classList.add('active');
+
+        function showSuccess(msg) {
+            successMessage.textContent = msg;
+            successMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+        }
+
+        function showLoading(text = 'Validating...') {
+            loadingText.textContent = text;
+            loading.style.display = 'block';
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+        }
+
+        function redirectToDashboard(token) {
+            let url;
+            if (returnTo) {
+                const dest = new URL(returnTo);
+                dest.searchParams.set('token', token);
+                url = dest.toString();
+            } else {
+                url = `${DASHBOARD_URL}?token=${encodeURIComponent(token)}`;
             }
-            
-            currentStep = step;
-            hideMessages();
+            window.location.href = url;
         }
-        
-        // ===================================================================
-        // MESSAGE HELPERS
-        // ===================================================================
-        
-        function showError(message) {
-            elements.errorMessage.textContent = message;
-            elements.errorMessage.style.display = 'block';
-            elements.successMessage.style.display = 'none';
-            elements.loading.style.display = 'none';
-        }
-        
-        function showSuccess(message) {
-            elements.successMessage.textContent = message;
-            elements.successMessage.style.display = 'block';
-            elements.errorMessage.style.display = 'none';
-        }
-        
-        function hideMessages() {
-            elements.errorMessage.style.display = 'none';
-            elements.successMessage.style.display = 'none';
-        }
-        
-        function showLoading(text = 'Processing...') {
-            elements.loadingText.textContent = text;
-            elements.loading.style.display = 'block';
-            hideMessages();
-        }
-        
-        function hideLoading() {
-            elements.loading.style.display = 'none';
-        }
-        
-        // ===================================================================
-        // STEP 1: LICENSE VALIDATION
-        // ===================================================================
-        
-        elements.licenseForm.addEventListener('submit', async (e) => {
+
+        document.getElementById('license-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            licenseKey = elements.licenseInput.value.trim();
-            
+
+            const licenseKey = document.getElementById('license-key').value.trim().toUpperCase();
             if (!licenseKey) {
-                showError('Please enter your license key');
+                showError('Please enter your license key.');
                 return;
             }
-            
+
             showLoading('Validating license key...');
-            
+
             try {
                 const response = await fetch(`${API_URL}/auth/validate`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ license_key: licenseKey })
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (data.success && data.token) {
-                    jwtToken = data.token;
-
-                    // Store token
+                    // Store token — dashboard reads it from localStorage
+                    localStorage.setItem('auth_token', data.token);
                     sessionStorage.setItem('auth_token', data.token);
-                    sessionStorage.setItem('user_info', JSON.stringify(data.user));
 
-                    // If broker already configured, skip setup and go straight to dashboard
-                    if (data.user && data.user.broker && data.user.broker_locked) {
-                        hideLoading();
-                        showSuccess('✅ License validated! Launching dashboard...');
+                    loading.style.display = 'none';
+                    showSuccess('✅ License validated! Launching dashboard...');
 
-                        let dashboardWithToken;
-                        if (returnTo) {
-                            const url = new URL(returnTo);
-                            url.searchParams.set('token', jwtToken);
-                            dashboardWithToken = url.toString();
-                        } else {
-                            dashboardWithToken = `${DASHBOARD_URL}?token=${encodeURIComponent(jwtToken)}`;
-                        }
-
-                        setTimeout(() => {
-                            window.location.href = dashboardWithToken;
-                        }, 1000);
-                        return;
-                    }
-
-                    // First time setup — go to API configuration
-                    hideLoading();
-                    showSuccess('License validated! Please configure your API keys.');
-                    setTimeout(() => {
-                        goToStep(2);
-                    }, 1000);
+                    setTimeout(() => redirectToDashboard(data.token), 1000);
                 } else {
-                    hideLoading();
                     showError(data.message || 'Invalid license key. Please check and try again.');
                 }
-            } catch (error) {
-                hideLoading();
+            } catch {
                 showError('Connection error. Please check your internet and try again.');
-                console.error('License validation error:', error);
             }
         });
-        
-        // ===================================================================
-        // STEP 2: API CONFIGURATION
-        // ===================================================================
-        
-        elements.apiForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const broker = elements.brokerSelect.value;
-            const apiKey = elements.apiKeyInput.value.trim();
-            const secretKey = elements.secretKeyInput.value.trim();
-            const polygonKey = elements.polygonKeyInput.value.trim();
-            const paperTrading = elements.paperTradingCheckbox.checked;
-            
-            if (!apiKey || !secretKey || !polygonKey) {
-                showError('Please enter all required API keys (Alpaca API, Alpaca Secret, and Polygon)');
-                return;
-            }
-            
-            showLoading('Validating API keys with Alpaca...');
-            
-            try {
-                // Step 1: Validate API keys
-                const validateResponse = await fetch(`${API_URL}/broker/validate`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${jwtToken}`
-                    },
-                    body: JSON.stringify({
-                        broker,
-                        api_key: apiKey,
-                        secret_key: secretKey,
-                        polygon_key: polygonKey,
-                        paper_trading: paperTrading
-                    })
-                });
-                
-                const validateData = await validateResponse.json();
-                
-                if (!validateData.success) {
-                    hideLoading();
-                    showError(validateData.message || 'Invalid API keys. Please check your credentials.');
-                    return;
-                }
-                
-                // Step 2: Save configuration
-                elements.loadingText.textContent = 'Saving configuration...';
-                
-                const saveResponse = await fetch(`${API_URL}/broker/select`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${jwtToken}`
-                    },
-                    body: JSON.stringify({
-                        broker,
-                        api_key: apiKey,
-                        secret_key: secretKey,
-                        polygon_key: polygonKey,
-                        paper_trading: paperTrading
-                    })
-                });
-                
-                const saveData = await saveResponse.json();
-                
-                if (saveData.success) {
-                    // Update user info
-                    const userInfo = JSON.parse(sessionStorage.getItem('user_info') || '{}');
-                    userInfo.broker = broker;
-                    userInfo.broker_locked = true;
-                    sessionStorage.setItem('user_info', JSON.stringify(userInfo));
-                    
-                    // Setup token refresh
-                    setupTokenRefresh();
-                    
-                    // Success! Redirect to dashboard WITH TOKEN IN URL
-                    hideLoading();
-                    showSuccess('✅ Setup complete! Launching dashboard...');
-                    
-                    // Redirect to returnTo URL (dev/prod) or default to production
-                    let dashboardWithToken;
-                    if (returnTo) {
-                        // User came from specific dashboard (dev or prod) - send them back
-                        const url = new URL(returnTo);
-                        url.searchParams.set('token', jwtToken);
-                        dashboardWithToken = url.toString();
-                    } else {
-                        // No returnTo - default to production dashboard
-                        dashboardWithToken = `${DASHBOARD_URL}?token=${encodeURIComponent(jwtToken)}`;
-                    }
-                    
-                    setTimeout(() => {
-                        window.location.href = dashboardWithToken;
-                    }, 1500);
-                } else {
-                    hideLoading();
-                    showError(saveData.message || 'Failed to save configuration. Please try again.');
-                }
-            } catch (error) {
-                hideLoading();
-                showError('Connection error. Please check your internet and try again.');
-                console.error('API configuration error:', error);
-            }
-        });
-        
-        // ===================================================================
-        // BACK BUTTON
-        // ===================================================================
-        
-        elements.backButton.addEventListener('click', () => {
-            goToStep(1);
-            elements.apiKeyInput.value = '';
-            elements.secretKeyInput.value = '';
-            elements.polygonKeyInput.value = '';
-        });
-        
-        // ===================================================================
-        // TERMS CHECKBOX ENFORCEMENT
-        // ===================================================================
-        
-        const termsCheckbox = document.getElementById('accept-terms');
-        const licenseSubmit = document.getElementById('license-submit');
-        
-        // Initially disable submit button
-        licenseSubmit.disabled = true;
-        licenseSubmit.style.opacity = '0.5';
-        licenseSubmit.style.cursor = 'not-allowed';
-        
-        // Enable button when checkbox is checked
-        termsCheckbox.addEventListener('change', function() {
-            if (this.checked) {
-                licenseSubmit.disabled = false;
-                licenseSubmit.style.opacity = '1';
-                licenseSubmit.style.cursor = 'pointer';
-            } else {
-                licenseSubmit.disabled = true;
-                licenseSubmit.style.opacity = '0.5';
-                licenseSubmit.style.cursor = 'not-allowed';
-            }
-        });
-        
-        // ===================================================================
-        // AUTO-FOCUS
-        // ===================================================================
-        
+
         window.addEventListener('load', () => {
-            elements.licenseInput.focus();
+            document.getElementById('license-key').focus();
         });
-        
-        // ===================================================================
-        // REMOVED AUTO-LOGIN CHECK
-        // User must enter license key every time for security
-        // ===================================================================
     </script>
 </body>
 </html>
