@@ -241,15 +241,37 @@
         <div id="success-message" class="success-message"></div>
 
         <form id="license-form">
+            <!-- License key input -->
+            <div id="license-section">
             <div class="form-group">
                 <label for="license-key">License Key</label>
                 <input
                     type="text"
                     id="license-key"
-                    placeholder="BETA-TEST-XXX"
-                    required
+                    placeholder="BETA-TEST-XXX or PRO-XXXX-XXXX-XXXX"
                     autocomplete="off">
-                <div class="help-text">Find this in your beta invitation email</div>
+                <div class="help-text">
+                    Find this in your welcome email —
+                    <a href="#" id="use-email" style="color:#667eea;text-decoration:none;font-weight:600;">sign in with email instead</a>
+                </div>
+            </div>
+            </div>
+
+            <!-- Email login (hidden by default) -->
+            <div id="email-section" style="display:none;">
+            <div class="form-group">
+                <label for="email-input">Email Address</label>
+                <input
+                    type="email"
+                    id="email-input"
+                    placeholder="you@example.com"
+                    autocomplete="email"
+                    style="font-family:inherit;letter-spacing:normal;">
+                <div class="help-text">
+                    Use the email you purchased with —
+                    <a href="#" id="use-license" style="color:#667eea;text-decoration:none;font-weight:600;">use license key instead</a>
+                </div>
+            </div>
             </div>
 
             <!-- LEGAL DISCLAIMER -->
@@ -286,6 +308,13 @@
             </button>
         </form>
 
+        <!-- Separate form for email login (outside license form so submit is independent) -->
+        <form id="email-form" style="display:none;margin-top:-10px;">
+            <button type="submit" class="button">
+                Launch Dashboard →
+            </button>
+        </form>
+
         <div id="loading" class="loading">
             <div class="spinner"></div>
             <p id="loading-text">Validating...</p>
@@ -308,12 +337,12 @@
         const urlParams = new URLSearchParams(window.location.search);
         const returnTo = urlParams.get('returnTo');
 
-        const errorMessage  = document.getElementById('error-message');
+        const errorMessage   = document.getElementById('error-message');
         const successMessage = document.getElementById('success-message');
-        const loading       = document.getElementById('loading');
-        const loadingText   = document.getElementById('loading-text');
-        const licenseSubmit = document.getElementById('license-submit');
-        const termsCheckbox = document.getElementById('accept-terms');
+        const loading        = document.getElementById('loading');
+        const loadingText    = document.getElementById('loading-text');
+        const licenseSubmit  = document.getElementById('license-submit');
+        const termsCheckbox  = document.getElementById('accept-terms');
 
         // Enable submit only when terms are accepted
         termsCheckbox.addEventListener('change', function () {
@@ -333,7 +362,7 @@
             errorMessage.style.display = 'none';
         }
 
-        function showLoading(text = 'Validating...') {
+        function showLoading(text = 'Signing in...') {
             loadingText.textContent = text;
             loading.style.display = 'block';
             errorMessage.style.display = 'none';
@@ -341,6 +370,8 @@
         }
 
         function redirectToDashboard(token) {
+            localStorage.setItem('auth_token', token);
+            sessionStorage.setItem('auth_token', token);
             let url;
             if (returnTo) {
                 const dest = new URL(returnTo);
@@ -352,41 +383,77 @@
             window.location.href = url;
         }
 
+        // ── License key submit ──────────────────────────────────────────────
         document.getElementById('license-form').addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const licenseKey = document.getElementById('license-key').value.trim().toUpperCase();
-            if (!licenseKey) {
-                showError('Please enter your license key.');
-                return;
-            }
+            if (!licenseKey) { showError('Please enter your license key.'); return; }
 
             showLoading('Validating license key...');
-
             try {
-                const response = await fetch(`${API_URL}/auth/validate`, {
+                const res = await fetch(`${API_URL}/auth/validate`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ license_key: licenseKey })
                 });
-
-                const data = await response.json();
-
+                const data = await res.json();
                 if (data.success && data.token) {
-                    // Store token — dashboard reads it from localStorage
-                    localStorage.setItem('auth_token', data.token);
-                    sessionStorage.setItem('auth_token', data.token);
-
-                    loading.style.display = 'none';
-                    showSuccess('✅ License validated! Launching dashboard...');
-
-                    setTimeout(() => redirectToDashboard(data.token), 1000);
+                    showSuccess('✅ Validated! Launching dashboard...');
+                    setTimeout(() => redirectToDashboard(data.token), 900);
                 } else {
-                    showError(data.message || 'Invalid license key. Please check and try again.');
+                    showError(data.error || data.message || 'Invalid license key. Please check and try again.');
                 }
             } catch {
                 showError('Connection error. Please check your internet and try again.');
             }
+        });
+
+        // ── Email login submit ──────────────────────────────────────────────
+        document.getElementById('email-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email-input').value.trim();
+            if (!email) { showError('Please enter your email address.'); return; }
+
+            showLoading('Looking up your account...');
+            try {
+                const res = await fetch(`${API_URL}/auth/email-login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                const data = await res.json();
+                if (data.success && data.token) {
+                    showSuccess('✅ Account found! Launching dashboard...');
+                    setTimeout(() => redirectToDashboard(data.token), 900);
+                } else {
+                    showError(data.error || 'No active subscription found for that email.');
+                }
+            } catch {
+                showError('Connection error. Please check your internet and try again.');
+            }
+        });
+
+        // ── Toggle between license key and email ────────────────────────────
+        document.getElementById('use-email').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('license-section').style.display = 'none';
+            document.getElementById('email-section').style.display = 'block';
+            document.getElementById('license-submit').closest('form').style.display = 'none';
+            document.getElementById('email-form').style.display = 'block';
+            document.getElementById('email-input').focus();
+            errorMessage.style.display = 'none';
+        });
+
+        document.getElementById('use-license').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('email-section').style.display = 'none';
+            document.getElementById('license-section').style.display = 'block';
+            document.getElementById('email-form').style.display = 'none';
+            document.getElementById('license-submit').closest('form').style.display = 'block';
+            document.getElementById('license-key').focus();
+            errorMessage.style.display = 'none';
         });
 
         window.addEventListener('load', () => {
