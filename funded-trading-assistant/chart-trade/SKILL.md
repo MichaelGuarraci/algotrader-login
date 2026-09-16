@@ -23,6 +23,21 @@ paragraph before the block.
    contracts ($200/point). If the account's contract count changed (funded
    scaling 2→3→4), use the current count and update the multiplier.
 
+## Reading a result screenshot ("sl hit", "tp hit", etc.)
+
+When the user posts a chart with horizontal lines already drawn on it after a
+trade closed, the line colors are a fixed convention — **always**:
+
+- **Blue = entry**
+- **Green = TP**
+- **Red = SL**
+
+Read the exact entry/exit price directly off those lines (the labeled price
+next to each line, not an eyeballed position). This is enough to log the
+trade without asking the user for the fill price — only ask if a line is
+missing, unlabeled, or the outcome (which line price was actually hit) is
+ambiguous.
+
 ## Output format — exactly this, nothing more
 
 ```
