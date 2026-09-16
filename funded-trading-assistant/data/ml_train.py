@@ -11,7 +11,7 @@ output isn't overstated.
 """
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import LeaveOneOut, cross_val_score
+from sklearn.model_selection import LeaveOneOut, cross_val_score, cross_val_predict
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
@@ -44,6 +44,38 @@ print(f"Overall win rate: {y.mean():.1%}")
 print(f"Leave-one-out CV accuracy: {scores.mean():.1%}  "
       f"(baseline = always-predict-win = {y.mean():.1%})")
 print(f"-> {'Model beats the naive baseline' if scores.mean() > y.mean() else 'Model does NOT beat just predicting the majority class yet'}")
+print()
+
+# Per-trade leave-one-out backtest: for each trade, the prediction comes
+# from a model trained on every OTHER trade only -- this is what "run the
+# model against all previous trades" actually means; it's never allowed to
+# see the trade it's scoring.
+loo_proba = cross_val_predict(model, X, y, cv=loo, method="predict_proba")[:, 1]
+df["model_p"] = loo_proba
+df["predicted"] = (df["model_p"] >= 0.5).astype(int)
+df["correct"] = (df["predicted"] == df["win"]).astype(int)
+
+print("--- Per-trade leave-one-out backtest (model never sees the trade it's scoring) ---")
+print(f"{'#':<3}{'Strategy':<28}{'Session':<18}{'Conf':<6}{'Actual':<8}{'Model p':<9}{'Call':<8}{'Hit?'}")
+for _, r in df.iterrows():
+    actual = "WIN" if r["win"] == 1 else "LOSS"
+    call = "WIN" if r["predicted"] == 1 else "LOSS"
+    hit = "✓" if r["correct"] == 1 else "✗"
+    conf = f"{r['confidence']:.0f}%" if pd.notna(r["confidence"]) else "-"
+    print(f"{r['trade']:<3}{r['strategy']:<28}{r['session']:<18}{conf:<6}{actual:<8}{r['model_p']:.1%}    {call:<8}{hit}")
+
+print(f"\nLOO backtest hit rate: {df['correct'].mean():.1%} "
+      f"({df['correct'].sum()}/{len(df)} calls matched the actual outcome)")
+
+# biggest misses -- where the model was most confidently wrong
+misses = df[df["correct"] == 0].copy()
+if len(misses):
+    misses["confidence_gap"] = (misses["model_p"] - 0.5).abs()
+    misses = misses.sort_values("confidence_gap", ascending=False).head(5)
+    print("\n--- Biggest model misses (most confident, still wrong) ---")
+    for _, r in misses.iterrows():
+        actual = "WIN" if r["win"] == 1 else "LOSS"
+        print(f"Trade {r['trade']:<3} {r['strategy']:<28} model said {r['model_p']:.1%} win, actually {actual}")
 print()
 
 model.fit(X, y)
