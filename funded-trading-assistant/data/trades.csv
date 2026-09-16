@@ -1,0 +1,37 @@
+trade,date,time,session,direction,entry,exit,contracts,strategy,confidence,management,notes
+1,2026-09-03,09:53,RTH,BUY,7710.5,7735.0,1,Trend Continuation,,Held to TP,Not logged live; recovered from tracker
+2,2026-09-03,18:00,Overnight/Globex,BUY,7749.0,7743.0,2,Unmanaged Overnight Hold,,Held to SL,"Left running overnight, stop never dragged"
+3,2026-09-04,10:00,RTH,SELL,7728.5,7721.0,2,Trend Continuation,,Trailed for Profit,Actively managed
+4,2026-09-07,18:00,Overnight/Globex,SELL,7716.75,7690.0,2,Trend Continuation,,Held to TP,"Labor Day -> Tue session, within one trading day"
+5,2026-09-08,08:31,Pre-Market,BUY,7703.75,7709.75,2,Pullback / Retest Entry,,Trailed for Profit,"Entered 4 by mistake, tracked as 2 for accounting"
+6,2026-09-08,10:13,RTH,BUY,7689.75,7693.0,2,Pullback / Retest Entry,,Trailed for Profit,Stopped 1 tick from SL before recovering
+7,2026-09-08,13:34,RTH,SELL,7702.0,7685.0,2,Trend Continuation,,Held to TP,Closed before 4:45 flatten
+8,2026-09-08,18:58,Overnight/Globex,BUY,7680.5,7683.5,4,Trend Continuation,,Trailed for Profit,First trade at new 4-contract max size
+9,2026-09-09,11:34,RTH,BUY,7634.25,7642.5,4,Pullback / Retest Entry,,Trailed for Profit,Reversed higher right after; stop capped upside
+10,2026-09-10,08:50,Pre-Market,BUY,7603.75,7588.0,4,Counter-Trend Bounce,35,Held to SL,"Support broke cleanly and kept falling, no bounce"
+11,2026-09-10,10:20,RTH,BUY,7592.25,7605.25,4,Pullback / Retest Entry,55,Trailed for Profit,"Zone A primary call, trailed most of the move"
+12,2026-09-10,13:10,RTH,SELL,7612.75,7605.0,4,Resistance / Support Fade,55,Early Exit,"Double-rejection-at-resistance thesis, banked early"
+13,2026-09-11,21:50,Overnight/Globex,BUY,7607.25,7600.0,4,Pullback / Retest Entry,50,Held to SL,"Overnight retest-of-support, thin liquidity"
+14,2026-09-11,10:45,RTH,BUY,7678.25,7659.75,4,Breakout,45,Held to SL,SL used was much wider than the planned ~7pt risk
+15,2026-09-11,10:55,RTH,BUY,7657.75,7677.5,4,Counter-Trend Bounce,40,Held to TP,Held past target to 7677.50 near the old highs
+16,2026-09-13,19:52,Weekend Reopen,SELL,7620.0,7627.0,4,Resistance / Support Fade,50,Held to SL,"Faded origin of ~65-70pt weekend gap-down, level broke on 3rd test"
+17,2026-09-14,20:00,Overnight/Globex,BUY,7627.5,7627.75,4,Breakout,50,Trailed for Profit,Scratch win right after Trade 16 flipped bias bullish
+18,2026-09-14,08:40,Pre-Market,SELL,7612.75,7602.5,4,Resistance / Support Fade,50,Trailed for Profit,"Zone A retest-of-broken-support, downtrend resumed"
+19,2026-09-14,09:25,RTH,SELL,7607.5,7600.75,4,Resistance / Support Fade,50,Trailed for Profit,"Retest-of-resistance call on the same 7,596-7,612 range"
+20,2026-09-14,09:55,RTH,SELL,7606.0,7612.0,4,Resistance / Support Fade,50,Held to SL,Fade of the range top; range broke upward instead of holding a 3rd time
+21,2026-09-14,10:15,RTH,SELL,7617.75,7623.75,4,Resistance / Support Fade,50,Held to SL,Fade attempt one level up; zone kept getting overrun
+22,2026-09-14,10:20,RTH,BUY,7624.75,7617.0,4,Breakout,50,Held to SL,Breakout right after 2 failed fades; 3rd straight loss in ~35 min chop
+23,2026-09-14,12:05,RTH,BUY,7631.0,7641.75,4,Pullback / Retest Entry,55,Trailed for Profit,Retest of broken 7627 resistance after strong recovery off the ~7595 low
+24,2026-09-14,13:15,RTH,BUY,7641.25,7634.25,4,Pullback / Retest Entry,55,Held to SL,Bull-flag pullback broke down through every higher low
+25,2026-09-15,11:00,RTH,SELL,7656.25,7652.0,4,Resistance / Support Fade,50,Trailed for Profit,Fade-the-bounce after a sharp morning drop
+26,2026-09-15,12:30,RTH,SELL,7659.25,7649.0,4,Resistance / Support Fade,45,Held to TP,"Fade-the-range-top; range-bound day, TP hit cleanly"
+27,2026-09-15,23:10,Overnight/Globex,SELL,7663.5,7668.0,4,Resistance / Support Fade,45,Held to SL,"Retest-of-prior-resistance fade; level broke, thin liquidity"
+28,2026-09-16,09:00,Pre-Market,BUY,7674.75,7672.0,4,Pullback / Retest Entry,40,Held to SL,Bounce-off-origin call; small tight-stop attempt that didn't hold
+29,2026-09-16,10:20,RTH,SELL,7683.5,7675.0,4,Resistance / Support Fade,45,Held to TP,Fade-the-retest-of-prior-high; TP hit on the pullback
+30,2026-09-16,10:30,RTH,BUY,7672.25,7687.75,4,Pullback / Retest Entry,45,Trailed for Profit,Bounce-off-range-low; trailed a long clean move back up
+31,2026-09-16,11:47,RTH,BUY,7683.0,7695.0,4,Breakout,,Held to TP,Breakout-continuation call right at the day's high; TP hit through the dead zone
+32,2026-09-16,12:35,RTH,BUY,7682.0,7674.0,4,Counter-Trend Bounce,45,Held to SL,Bounce-off-marked-support right after a sharp spike-and-reject
+33,2026-09-16,14:25,RTH,BUY,7678.25,7673.0,4,Resistance / Support Fade,40,Held to SL,Fade-the-range-low bounce; the marked range low gave way
+34,2026-09-16,14:55,RTH,SELL,7674.25,7682.0,4,Resistance / Support Fade,45,Held to SL,Retest-of-breakdown-origin fade after the ~30pt plunge/V-recovery; stopped out immediately
+35,2026-09-16,15:15,RTH,SELL,7680.25,7606.5,4,Resistance / Support Fade,,Trailed for Profit,"User's own retest-of-origin short, TP dragged well past the 7651 plan; largest single win on the account"
+36,2026-09-16,15:55,RTH,SELL,7601.5,7607.0,4,Resistance / Support Fade,45,Held to SL,Fade-the-bounce call continuing the same afternoon downtrend read as Trade 35; SL held as planned
