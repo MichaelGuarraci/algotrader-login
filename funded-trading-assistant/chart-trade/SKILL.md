@@ -190,7 +190,6 @@ ZONE A ▸ <SELL/BUY> <low> – <high> (<one-clause reason>)          confidence
 ZONE B ▸ <SELL/BUY> <low> – <high> (<one-clause reason>)          confidence <NN>%  [<n>/account if different from above]
  Fill near TOP    (<high>) → TP <tp>  SL <sl>   R <r>   risk $<risk>   · reward $<reward>
  Fill near BOTTOM (<low>)  → TP <tp>  SL <sl>   R <r>   risk $<risk>   · reward $<reward>
- Fill near BOTTOM (<low>)  → TP <tp>  SL <sl>   R <r>   risk $<risk/acct> ($<risk x5> combined) · reward $<reward/acct> ($<reward x5> combined)
 ```
 
 Rules for filling it in:

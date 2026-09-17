@@ -176,12 +176,14 @@ line is missing, unlabeled, or the outcome is ambiguous.
 
 ```
 NOW  <price>  <one-clause structural read>[ dead zone]
+Buffer: $<per-acct> — <N> max-loss trades from floor
+Recommended: <n> contracts/account
 
 ZONE A ▸ <SELL/BUY> <low> – <high> (<one-clause reason>)          confidence <NN>%  [← primary]
  Fill near TOP    (<high>) → TP <tp>  SL <sl>   R <r>   risk $<risk>   · reward $<reward>
  Fill near BOTTOM (<low>)  → TP <tp>  SL <sl>   R <r>   risk $<risk>   · reward $<reward>
 
-ZONE B ▸ <SELL/BUY> <low> – <high> (<one-clause reason>)          confidence <NN>%
+ZONE B ▸ <SELL/BUY> <low> – <high> (<one-clause reason>)          confidence <NN>%  [<n>/account if different from above]
  Fill near TOP    (<high>) → TP <tp>  SL <sl>   R <r>   risk $<risk>   · reward $<reward>
  Fill near BOTTOM (<low>)  → TP <tp>  SL <sl>   R <r>   risk $<risk>   · reward $<reward>
 ```
