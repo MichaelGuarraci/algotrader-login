@@ -1,9 +1,43 @@
 ---
 name: chart-trade
-description: Read an ES (E-mini S&P 500) chart screenshot and return a NOW / ZONE A / ZONE B trade call with per-fill risk, reward, and R-multiple. Use whenever the user posts a chart image and asks for a call, "anything now", "what should I do", or reports a fill/exit that needs a fresh read afterward. Sized for the funded account's current contract count (currently 4 contracts, $50/point/contract = $200/point).
+description: Read an ES (E-mini S&P 500) chart screenshot and return a NOW / ZONE A / ZONE B trade call with per-fill risk, reward, and R-multiple. Use whenever the user posts a chart image and asks for a call, "anything now", "what should I do", or reports a fill/exit that needs a fresh read afterward. Sized for the current active account (see Account context below).
 ---
 
 # Chart Trade Call
+
+## Account context — read this before every call
+
+**Active simulation (replaced the prior 50K funded sim on 2026-09-17):**
+5x **Tradeify Select 150K** accounts, stacked, starting from **EVALUATION**
+(not funded). The prior 50K Select Flex funded sim ended at Trade 37,
+record 22-15, net +$25,825, balance $75,825 — preserved in its history in
+the Account Tracker, not carried forward as this account's starting state.
+
+- **Per-account eval rules:** profit target $9,000, EOD trailing drawdown
+  $4,500, floor locks permanently at $150,100 (start + $100) once earned,
+  **no daily loss limit during eval**, 40% consistency rule (biggest single
+  day ≤ 40% of total profit) — this only delays qualifying to pass, it does
+  not fail the account or restrict trading.
+- **Contracts during eval: 12 mini / 120 micro per account, full size from
+  day one** (same pattern as the prior 50K eval). $50/point/contract →
+  **$600/point per account**.
+- **Mirroring across the 5 accounts:** same direction, same instrument,
+  same trade on all 5 simultaneously is explicitly allowed scaling, not a
+  violation — every call in this skill is priced per-account (12 contracts,
+  $600/point); the Account Tracker separately multiplies by 5 for the true
+  combined P&L across all accounts. Never combine size across accounts
+  into one account's position, and never hold opposing positions on the
+  same instrument across the 5.
+- **Funded-phase rules (once an account passes)**: starts at a reduced
+  contract count (3 mini confirmed; intermediate steps up to 12 not yet
+  confirmed — still open), scales back to 12 mini / 120 micro once that
+  account's EOD balance reaches $154,500 (+$4,500 profit), at which point
+  its floor also locks. No consistency rule once funded. Daily-loss-limit
+  status once funded not yet reconfirmed for Select 150K specifically —
+  treat as unresolved until sourced.
+- Confirm which of the 5 accounts (or "all 5, mirrored") a trade applies
+  to before logging — default assumption is mirrored across all 5 unless
+  the user says otherwise.
 
 Read the chart, verify the time, return exactly one call in the fixed format
 below. No lead-in paragraph, no hedging, no wrap-up recommendation. The
@@ -19,9 +53,11 @@ paragraph before the block.
    price.
 3. If ET time falls in 11:00–13:10, this is the **dead zone**. Still give the
    call, but append ` [dead zone]` on the NOW line.
-4. Confirm current contract count before computing dollars. Default is 4
-   contracts ($200/point). If the account's contract count changed (funded
-   scaling 2→3→4), use the current count and update the multiplier.
+4. Confirm current contract count before computing dollars. Default is 12
+   contracts per account ($600/point per account), full eval size. If an
+   account passes to funded and its count is temporarily reduced, use that
+   account's actual current count and update the multiplier — don't assume
+   all 5 accounts are always in sync once any of them pass.
 
 ## Reading a result screenshot ("sl hit", "tp hit", etc.)
 
