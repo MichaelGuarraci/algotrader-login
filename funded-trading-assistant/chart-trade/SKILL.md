@@ -30,13 +30,17 @@ the Account Tracker, not carried forward as this account's starting state.
   combined P&L across all accounts. Never combine size across accounts
   into one account's position, and never hold opposing positions on the
   same instrument across the 5.
-- **Funded-phase rules (once an account passes)**: starts at a reduced
-  contract count (3 mini confirmed; intermediate steps up to 12 not yet
-  confirmed — still open), scales back to 12 mini / 120 micro once that
-  account's EOD balance reaches $154,500 (+$4,500 profit), at which point
-  its floor also locks. No consistency rule once funded. Daily-loss-limit
-  status once funded not yet reconfirmed for Select 150K specifically —
-  treat as unresolved until sourced.
+- **Funded-phase rules (once an account passes)**: the funded account
+  **resets to the base starting balance ($150,000) — eval profit does
+  NOT carry over**, confirmed via research. Buffer/drawdown restarts
+  trailing fresh from that reset balance, not from wherever the eval
+  ended. Starts at a reduced contract count (3 mini confirmed;
+  intermediate steps up to 12 not yet confirmed — still open), scales
+  back to 12 mini / 120 micro once that account's EOD balance reaches
+  $154,500 (+$4,500 profit from the reset $150,000 base), at which point
+  its floor locks at $150,100. No consistency rule once funded.
+  Daily-loss-limit status once funded not yet reconfirmed for Select
+  150K specifically — treat as unresolved until sourced.
 - Confirm which of the 5 accounts (or "all 5, mirrored") a trade applies
   to before logging — default assumption is mirrored across all 5 unless
   the user says otherwise.
