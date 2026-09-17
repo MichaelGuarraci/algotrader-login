@@ -18,9 +18,11 @@ the Account Tracker, not carried forward as this account's starting state.
   **no daily loss limit during eval**, 40% consistency rule (biggest single
   day ≤ 40% of total profit) — this only delays qualifying to pass, it does
   not fail the account or restrict trading.
-- **Contracts during eval: 12 mini / 120 micro per account, full size from
-  day one** (same pattern as the prior 50K eval). $50/point/contract →
-  **$600/point per account**.
+- **Eligible for up to 12 mini / 120 micro per account during eval, full
+  size available from day one** (same pattern as the prior 50K eval).
+  $50/point/contract → **$600/point per account at full size**. Actual
+  count used per trade is governed by the risk-sizing rule below, not
+  automatically 12.
 - **Mirroring across the 5 accounts:** same direction, same instrument,
   same trade on all 5 simultaneously is explicitly allowed scaling, not a
   violation — every call in this skill is priced per-account (12 contracts,
@@ -43,12 +45,20 @@ the Account Tracker, not carried forward as this account's starting state.
 
 Added 2026-09-17 at user's request. Before setting SL/TP on any call:
 
-- **SL sizing must survive at least 3 consecutive max-loss trades before
+- **Position must survive at least 3 consecutive max-loss trades before
   touching the floor.** Max per-trade risk = current buffer ÷ 3, recomputed
   from the current buffer (not always $4,500 — it shrinks after a loss and
   only resets upward after a new equity peak). At a full $4,500 buffer
-  that's ≤$1,500/account (≤2.5 pts at 12 contracts); after any loss,
-  recompute from the smaller buffer and shrink size accordingly.
+  that's ≤$1,500/account per trade.
+- **Flex contract count to hit that budget, not the stop distance.** SL
+  stays at its real structural level (beyond the zone/level, same as
+  always) — never squeeze a stop tight just to fit the risk budget, that's
+  how noise stops out a correct thesis. Instead: `contracts = floor(max
+  risk ÷ (structural SL distance in pts × $50))`, capped at 12. Only use
+  the full 12 when the structural stop is tight enough that 12 contracts
+  already fits the budget (≤2.5 pts at a full $4,500 buffer); size down
+  for wider structural stops instead of shrinking the stop. State the
+  contract count used and why whenever it's below 12.
 - **State the drawdown distance every time**, not just when asked: current
   buffer to floor, and how many max-size losses in a row it would take to
   hit it (target: always ≥3). This goes in every trade-result report and
@@ -100,11 +110,12 @@ paragraph before the block.
    price.
 3. If ET time falls in 11:00–13:10, this is the **dead zone**. Still give the
    call, but append ` [dead zone]` on the NOW line.
-4. Confirm current contract count before computing dollars. Default is 12
-   contracts per account ($600/point per account), full eval size. If an
-   account passes to funded and its count is temporarily reduced, use that
-   account's actual current count and update the multiplier — don't assume
-   all 5 accounts are always in sync once any of them pass.
+4. Compute contract count per the risk-sizing rule below (12 is the
+   eval ceiling, not the default — actual count depends on the current
+   buffer and this trade's structural stop distance). If an account
+   passes to funded and its count is temporarily reduced, use that
+   account's actual current count and update the multiplier — don't
+   assume all 5 accounts are always in sync once any of them pass.
 
 ## Reading a result screenshot ("sl hit", "tp hit", etc.)
 
