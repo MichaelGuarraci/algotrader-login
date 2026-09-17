@@ -43,11 +43,16 @@ the Account Tracker, not carried forward as this account's starting state.
 
 Added 2026-09-17 at user's request. Before setting SL/TP on any call:
 
-- **SL sizing must respect the $4,500/account trailing drawdown.** Check
-  the current buffer to floor first. As a working ceiling, don't size a
-  stop that risks more than a modest fraction of the remaining buffer on
-  one trade (roughly ≤$1,500/account, i.e. ≤2.5 pts at 12 contracts)
-  unless the setup and remaining buffer both clearly justify more.
+- **SL sizing must survive at least 3 consecutive max-loss trades before
+  touching the floor.** Max per-trade risk = current buffer ÷ 3, recomputed
+  from the current buffer (not always $4,500 — it shrinks after a loss and
+  only resets upward after a new equity peak). At a full $4,500 buffer
+  that's ≤$1,500/account (≤2.5 pts at 12 contracts); after any loss,
+  recompute from the smaller buffer and shrink size accordingly.
+- **State the drawdown distance every time**, not just when asked: current
+  buffer to floor, and how many max-size losses in a row it would take to
+  hit it (target: always ≥3). This goes in every trade-result report and
+  before every new call that risks capital.
 - **TP sizing must respect the day's remaining room under the 40%
   consistency cap** whenever that day already has profit booked. Compute
   remaining room = (40% × $9,000) − today's profit-so-far *before*
