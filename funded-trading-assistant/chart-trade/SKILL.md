@@ -63,6 +63,11 @@ Added 2026-09-17 at user's request. Before setting SL/TP on any call:
   buffer to floor, and how many max-size losses in a row it would take to
   hit it (target: always ≥3). This goes in every trade-result report and
   before every new call that risks capital.
+- **Show every dollar figure both per-account and combined (×5), always
+  labeled which is which.** Risk, reward, and drawdown/buffer all get both
+  numbers side by side — never print just one and leave the other
+  implicit. This is what avoids confusing a trade's reward with an
+  unrelated number like the $9,000 eval target.
 - **TP sizing must respect the day's remaining room under the 40%
   consistency cap** whenever that day already has profit booked. Compute
   remaining room = (40% × $9,000) − today's profit-so-far *before*
@@ -163,14 +168,17 @@ ambiguous.
 
 ```
 NOW  <price>  <one-clause structural read>[ dead zone]
+Buffer: $<per-acct> per account · $<combined> combined (5x) — <N> max-loss trades from floor
 
 ZONE A ▸ <SELL/BUY> <low> – <high> (<one-clause reason>)          confidence <NN>%  [← primary]
- Fill near TOP    (<high>) → TP <tp>  SL <sl>   R <r>   risk $<risk>   · reward $<reward>
- Fill near BOTTOM (<low>)  → TP <tp>  SL <sl>   R <r>   risk $<risk>   · reward $<reward>
+ Contracts: <n>/account (<why, if <12>)
+ Fill near TOP    (<high>) → TP <tp>  SL <sl>   R <r>   risk $<risk/acct> ($<risk x5> combined) · reward $<reward/acct> ($<reward x5> combined)
+ Fill near BOTTOM (<low>)  → TP <tp>  SL <sl>   R <r>   risk $<risk/acct> ($<risk x5> combined) · reward $<reward/acct> ($<reward x5> combined)
 
 ZONE B ▸ <SELL/BUY> <low> – <high> (<one-clause reason>)          confidence <NN>%
- Fill near TOP    (<high>) → TP <tp>  SL <sl>   R <r>   risk $<risk>   · reward $<reward>
- Fill near BOTTOM (<low>)  → TP <tp>  SL <sl>   R <r>   risk $<risk>   · reward $<reward>
+ Contracts: <n>/account (<why, if <12>)
+ Fill near TOP    (<high>) → TP <tp>  SL <sl>   R <r>   risk $<risk/acct> ($<risk x5> combined) · reward $<reward/acct> ($<reward x5> combined)
+ Fill near BOTTOM (<low>)  → TP <tp>  SL <sl>   R <r>   risk $<risk/acct> ($<risk x5> combined) · reward $<reward/acct> ($<reward x5> combined)
 ```
 
 Rules for filling it in:
