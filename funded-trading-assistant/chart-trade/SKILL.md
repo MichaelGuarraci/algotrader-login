@@ -39,6 +39,29 @@ the Account Tracker, not carried forward as this account's starting state.
   to before logging — default assumption is mirrored across all 5 unless
   the user says otherwise.
 
+## Reporting rule — phase-dependent primary metric
+
+When reporting a closed trade's P&L (in chat and in the Account Tracker):
+
+- **During EVALUATION: report per-account first.** Per-account is the
+  number that actually matters (each account has its own $9,000 target and
+  $4,500 drawdown) — lead with it. The combined (x5) figure is secondary
+  context, not the headline.
+- **Once any account passes to FUNDED: report the combined/total figure
+  first** for that account's contribution — funded accounts don't have a
+  per-account target to chase in the same way, so the aggregate is what
+  matters. If some accounts are still in eval and others are funded, report
+  both groups separately (don't blend an eval account's progress into a
+  funded total).
+- **Every trade-result report during eval must show, every time:**
+  1. Progress toward the $9,000 per-account profit target (dollar amount
+     and %).
+  2. Consistency-rule status: current biggest single day's profit as a %
+     of total profit so far, and whether that's under or at-risk of the
+     40% cap.
+  Don't wait to be asked for these — they're part of the standard report,
+  not optional detail.
+
 Read the chart, verify the time, return exactly one call in the fixed format
 below. No lead-in paragraph, no hedging, no wrap-up recommendation. The
 caution flags below are the only prose allowed, and they go inline, not as a
