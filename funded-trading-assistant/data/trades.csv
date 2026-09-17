@@ -35,3 +35,4 @@ trade,date,time,session,direction,entry,exit,contracts,strategy,confidence,manag
 34,2026-09-16,14:55,RTH,SELL,7674.25,7682.0,4,Resistance / Support Fade,45,Held to SL,Retest-of-breakdown-origin fade after the ~30pt plunge/V-recovery; stopped out immediately
 35,2026-09-16,15:15,RTH,SELL,7680.25,7606.5,4,Resistance / Support Fade,,Trailed for Profit,"User's own retest-of-origin short, TP dragged well past the 7651 plan; largest single win on the account"
 36,2026-09-16,15:55,RTH,SELL,7601.5,7607.0,4,Resistance / Support Fade,45,Held to SL,Fade-the-bounce call continuing the same afternoon downtrend read as Trade 35; SL held as planned
+37,2026-09-16,20:20,RTH,BUY,7655.5,7656.25,4,Pullback / Retest Entry,45,Trailed for Profit,"Zone A retest-of-breakout continuation call; the strong uptrend after Trade 36 kept extending, dragged for a small scratch win"
