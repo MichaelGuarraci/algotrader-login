@@ -65,16 +65,15 @@ the source of truth once real fills start happening.
   Pull the current buffer from the actual account dashboard, not a
   remembered number — it changes with every closed trade and every new
   equity peak.
-- **Flex contract count to hit that budget, not the stop distance.** SL
-  stays at its real structural level. `contracts = floor(max risk ÷
-  (structural SL distance in pts × $50))`, capped at that account's
-  current contract limit. Size down for wide structural stops instead of
-  shrinking the stop. This is the **eval-phase** default.
-- **Once FUNDED, default to that account's current max contract limit.**
-  Only size below max if a loss at max size would risk more than 1/3 of
-  the current buffer — recompute every call, but expect it to almost
-  always clear at max size once the buffer has grown past the early
-  fragile post-funding stage.
+- **The contract-count formula is always the same, in eval or funded —
+  there is no "funded, so skip the math" shortcut.** SL stays at its real
+  structural level. Compute: `contracts = floor(max risk ÷ (structural SL
+  distance in pts × $50))`, capped at that account's current contract
+  limit. This has to be **actually calculated every time** from that
+  trade's real stop distance — never assert max contracts just because
+  the account is funded or the buffer looks large in absolute dollars.
+  Max contracts is an outcome of the formula (tight stop, and/or a buffer
+  grown large relative to it), never a separate override rule.
 - **Put the recommended contract count at the top of every call**, right
   after the NOW line — one number, sized off the primary zone's
   structural stop (or the account's max, once funded and that clears).

@@ -54,20 +54,17 @@ Added 2026-09-17 at user's request. Before setting SL/TP on any call:
   from the current buffer (not always $4,500 — it shrinks after a loss and
   only resets upward after a new equity peak). At a full $4,500 buffer
   that's ≤$1,500/account per trade.
-- **Flex contract count to hit that budget, not the stop distance.** SL
-  stays at its real structural level (beyond the zone/level, same as
-  always) — never squeeze a stop tight just to fit the risk budget, that's
-  how noise stops out a correct thesis. Instead: `contracts = floor(max
-  risk ÷ (structural SL distance in pts × $50))`, capped at the account's
-  current contract limit (12 during this eval). Size down for wider
-  structural stops instead of shrinking the stop.
-- **Once FUNDED, default to that account's current max contract limit.**
-  Only size below max if a loss at max size would risk more than 1/3 of
-  the *current* buffer — recompute that check every call, but once funded
-  with a buffer that's grown past the early fragile stage, expect it to
-  almost always clear at max size. In practice this means: eval = flex
-  size to protect a thin/fixed buffer; funded with a healthy buffer =
-  max contracts by default.
+- **The contract-count formula is always the same, in eval or funded —
+  there is no "funded, so skip the math" shortcut.** SL stays at its real
+  structural level; never squeeze a stop tight just to fit the risk
+  budget. Compute: `contracts = floor(max risk ÷ (structural SL distance
+  in pts × $50))`, capped at the account's current contract limit (12
+  during this eval). This has to be **actually calculated every time**,
+  using that trade's real stop distance — never assert max contracts
+  just because the account is funded or the buffer looks big in absolute
+  dollars. It only lands on max when the math clears at that stop width
+  (tight stop, and/or a buffer that's grown large relative to it) — that's
+  an outcome of the formula, not a separate rule that overrides it.
 - **Put the recommended contract count at the top of every call**, right
   after the NOW line — one number for the call, sized off the primary
   zone's structural stop. If the secondary zone's stop is different enough
