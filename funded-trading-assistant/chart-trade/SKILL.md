@@ -39,6 +39,25 @@ the Account Tracker, not carried forward as this account's starting state.
   to before logging — default assumption is mirrored across all 5 unless
   the user says otherwise.
 
+## Risk-sizing rule — SL/TP must respect eval limits
+
+Added 2026-09-17 at user's request. Before setting SL/TP on any call:
+
+- **SL sizing must respect the $4,500/account trailing drawdown.** Check
+  the current buffer to floor first. As a working ceiling, don't size a
+  stop that risks more than a modest fraction of the remaining buffer on
+  one trade (roughly ≤$1,500/account, i.e. ≤2.5 pts at 12 contracts)
+  unless the setup and remaining buffer both clearly justify more.
+- **TP sizing must respect the day's remaining room under the 40%
+  consistency cap** whenever that day already has profit booked. Compute
+  remaining room = (40% × $9,000) − today's profit-so-far *before*
+  sizing a new target — don't print a structural TP without checking
+  this first, and say explicitly when a TP is capped short of structure
+  for this reason.
+- Recompute both of these fresh from the current balance/target progress
+  before every call — they change after every closed trade, not just once
+  per session.
+
 ## Reporting rule — phase-dependent primary metric
 
 When reporting a closed trade's P&L (in chat and in the Account Tracker):
