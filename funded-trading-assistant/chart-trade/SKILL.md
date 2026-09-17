@@ -73,6 +73,30 @@ Added 2026-09-17 at user's request. Before setting SL/TP on any call:
   before every call — they change after every closed trade, not just once
   per session.
 
+## Practice trades — paper reps, separate from the real eval log
+
+Added 2026-09-17 at user's request. The user can call for a "practice"
+trade: full 12-contract sizing, ignoring the risk-budget contract-flex
+rule above, **not placed on the real eval accounts** and **not counted**
+toward the $9,000 target, the $4,500 drawdown/buffer, or the 40%
+consistency ratio. These are paper reps for practice/calibration only.
+
+- Log practice trades in the Account Tracker's separate **Practice Log**
+  section — never mixed into the Evaluation trade log table or its
+  running totals.
+- Always default to the real (risk-budgeted) trade unless the user
+  explicitly says "practice." Don't assume practice sizing on your own.
+- Important caveat to repeat if the user seems to be conflating the two:
+  on the actual Tradeify/Tradovate platform, any order actually placed on
+  a live eval account counts for real — there's no way to place a real
+  fill that Tradeify itself exempts from P&L/drawdown/consistency. This
+  practice/real split only works because these are simulated paper reps,
+  not real orders.
+- Once an account passes and is funded, real (non-practice) trades resume
+  at whatever the funded contract sizing allows — practice-log trades
+  before that point stay in their own record, not backfilled into the
+  funded totals.
+
 ## Reporting rule — phase-dependent primary metric
 
 When reporting a closed trade's P&L (in chat and in the Account Tracker):
