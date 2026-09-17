@@ -9,36 +9,47 @@ This is the real-money counterpart to the `chart-trade` simulation skill.
 Same call format, same risk discipline — the difference is everything
 below that only matters once actual dollars are on the line.
 
-## Account context — same account, same rules as the simulation
+## Account context — Tradeify Select, any size — confirm which one first
 
-This is real Tradeify — **5x Select 150K, stacked**, the same account
-structure the `chart-trade` simulation has been modeling. The rules
-carry over directly, not as a generic placeholder:
+This is real Tradeify **Select** (the same family the simulation has been
+modeling), but the exact size purchased isn't fixed to the 5x150K stack —
+it could be a single 50K, a single 150K, or another combination. **Before
+the first real call, confirm which size(s) were actually purchased** and
+apply the matching row below. All of these are Select-family evaluation
+accounts — confirmed no daily loss limit and a 40% consistency rule
+(delays passing, doesn't fail the account) during eval, across all sizes.
 
-- **Per-account eval rules:** profit target $9,000, EOD trailing drawdown
-  $4,500, floor locks permanently at $150,100 (start + $100) once earned,
-  no daily loss limit during eval, 40% consistency rule (biggest single
-  day ≤ 40% of total profit) — delays passing, doesn't fail the account.
-- **Eligible for up to 12 mini / 120 micro per account during eval, full
-  size from day one.** $50/point/contract → $600/point per account at
-  full size. Actual count per trade follows the risk-sizing rule below,
-  not automatically 12.
-- **Mirroring across the 5 accounts** via Tradovate Group Trade (Manage
-  Groups → all 5 accounts, Order Quantity 1 each → group base unit 5 →
-  order quantity 60 = 12/account). Never combine size across accounts
-  into one account's position; never hold opposing positions on the same
-  instrument across the 5.
-- **Funded-phase (once an account passes):** starts at a reduced contract
-  count (3 mini confirmed; intermediate steps to 12 still unconfirmed),
-  scales back to 12 mini once that account's EOD balance reaches
-  $154,500 (+$4,500 profit), floor locks at $150,100. No consistency rule
-  once funded. Daily-loss-limit status once funded not yet reconfirmed
-  for Select 150K specifically — treat as open until sourced.
-- **Still confirm against the live Tradeify dashboard before trusting a
-  number that matters** (current buffer, exact funded contract count,
-  whether a daily loss limit applies) — these were researched for
-  planning, and the account's actual state is the source of truth once
-  real fills start happening.
+| Size | Eval profit target | Eval/funded trailing drawdown | Eval contracts (full, day one) | Funded starting contracts | Funded full-scale trigger | Floor lock point |
+|---|---|---|---|---|---|---|
+| $25K | $1,500 | not confirmed — check dashboard | 2 mini / 20 micro | not confirmed | not confirmed | $25,100 |
+| $50K | $3,000 | **$2,000** (confirmed) | 4 mini / 40 micro | 2 mini / 20 micro (confirmed) | $2,000 profit → 4 mini (confirmed) | $50,100 |
+| $100K | $6,000 | **$3,000** (inferred from the funded scaling trigger — same pattern as 50K/150K below, not independently confirmed) | 8 mini / 80 micro | not confirmed | $3,000 profit → 8 mini (confirmed) | $100,100 |
+| $150K | $9,000 | **$4,500** (confirmed) | 12 mini / 120 micro | 3 mini / 30 micro (confirmed) | $4,500 profit → 12 mini (confirmed) | $150,100 |
+
+Pattern worth knowing: on every size confirmed so far, the funded
+full-scale trigger profit **equals** the trailing drawdown amount exactly
+— that's how the $100K drawdown above is inferred, not guessed randomly.
+
+**300K is a separate "V2" structure, not this table** — it carries its
+own multi-step funded scaling (3 mini at $0-1,500 profit up to 16 mini at
+$7,000+) and at least one source describes a daily loss limit on 300K V2
+eval ($4,000 soft / $8,000 max) that contradicts the "no daily loss limit
+during eval" rule above. If 300K is ever the actual purchase, treat it as
+needing fresh research, not this table.
+
+**If stacking multiple accounts** (any mix, up to 5 / $750K combined):
+same-direction mirroring across your own accounts is allowed scaling, not
+a violation; never combine size across accounts into one account's
+position, never hold opposing positions across the 5. Execution via
+Tradovate Group Trade: Manage Groups → drag in the accounts → Order
+Quantity 1 each → group base unit = account count → order quantity =
+that count × contracts-per-account, split automatically.
+
+**Always confirm against the live Tradeify dashboard before trusting a
+number that matters** — current buffer, exact funded contract count,
+whether a daily loss limit applies to this specific size/payout-policy.
+This table was researched for planning; the account's actual state is
+the source of truth once real fills start happening.
 
 ## Risk-sizing rule — same discipline as the simulation, now with real stakes
 
