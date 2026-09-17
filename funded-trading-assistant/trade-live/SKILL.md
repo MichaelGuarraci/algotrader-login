@@ -30,6 +30,13 @@ Pattern worth knowing: on every size confirmed so far, the funded
 full-scale trigger profit **equals** the trailing drawdown amount exactly
 — that's how the $100K drawdown above is inferred, not guessed randomly.
 
+**Passing eval does NOT carry the balance/buffer into funded — confirmed
+via research.** The funded account resets to the base starting balance
+(e.g., $150,000) regardless of what the eval account ended at; the
+buffer/drawdown starts trailing fresh from that reset balance, then locks
+at the floor-lock point above once earned. Don't assume a healthy eval
+buffer means a healthy funded buffer — it starts over.
+
 **300K is a separate "V2" structure, not this table** — it carries its
 own multi-step funded scaling (3 mini at $0-1,500 profit up to 16 mini at
 $7,000+) and at least one source describes a daily loss limit on 300K V2
@@ -62,10 +69,20 @@ the source of truth once real fills start happening.
   stays at its real structural level. `contracts = floor(max risk ÷
   (structural SL distance in pts × $50))`, capped at that account's
   current contract limit. Size down for wide structural stops instead of
-  shrinking the stop.
+  shrinking the stop. This is the **eval-phase** default.
+- **Once FUNDED, default to that account's current max contract limit.**
+  Only size below max if a loss at max size would risk more than 1/3 of
+  the current buffer — recompute every call, but expect it to almost
+  always clear at max size once the buffer has grown past the early
+  fragile post-funding stage.
+- **Put the recommended contract count at the top of every call**, right
+  after the NOW line — one number, sized off the primary zone's
+  structural stop (or the account's max, once funded and that clears).
 - **State the drawdown distance every time**: current buffer to floor,
   and how many max-size losses in a row it would take to hit it (target:
   always ≥3).
+- **All dollar figures are per-account** — no combined/stack-wide totals
+  unless explicitly asked for in the moment.
 - **TP sizing must respect any consistency-rule room** if the account is
   still subject to one (funded Select accounts typically aren't, per the
   simulation's research — confirm this specific account before assuming).
