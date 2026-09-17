@@ -9,32 +9,36 @@ This is the real-money counterpart to the `chart-trade` simulation skill.
 Same call format, same risk discipline — the difference is everything
 below that only matters once actual dollars are on the line.
 
-## Account context — fill in once funding is confirmed
+## Account context — same account, same rules as the simulation
 
-This skill starts generic because the exact account(s) that end up funded
-aren't known yet. **Before the first real call**, confirm and record here
-(and in a real-money Account Tracker, kept separate from the simulation
-tracker):
+This is real Tradeify — **5x Select 150K, stacked**, the same account
+structure the `chart-trade` simulation has been modeling. The rules
+carry over directly, not as a generic placeholder:
 
-- Which account(s) actually passed and are funded — size (50K/100K/150K/
-  etc.), type (Select/Growth/Lightning), and how many of the 5-account
-  stack passed vs. are still in eval or failed.
-- That account's **funded-phase** contract limits (starts reduced, scales
-  up with EOD equity — confirm the actual starting tier and scaling
-  thresholds for the specific size/type that passed, don't assume the
-  50K or 150K numbers from the simulation carry over).
-- That account's **actual drawdown amount and current floor** (check
-  Tradeify's dashboard directly — don't trust a carried-over simulation
-  number).
-- Daily loss limit, if any, for that specific account/payout-policy
-  combination (Flex vs. Daily can differ — confirm which this account
-  uses).
-- Payout terms: frequency, cap per payout, profit split.
-
-**Never assume simulation numbers apply to the real account without
-re-checking against Tradeify's actual dashboard first.** The simulation's
-numbers were researched for planning purposes, not verified against your
-specific live account state.
+- **Per-account eval rules:** profit target $9,000, EOD trailing drawdown
+  $4,500, floor locks permanently at $150,100 (start + $100) once earned,
+  no daily loss limit during eval, 40% consistency rule (biggest single
+  day ≤ 40% of total profit) — delays passing, doesn't fail the account.
+- **Eligible for up to 12 mini / 120 micro per account during eval, full
+  size from day one.** $50/point/contract → $600/point per account at
+  full size. Actual count per trade follows the risk-sizing rule below,
+  not automatically 12.
+- **Mirroring across the 5 accounts** via Tradovate Group Trade (Manage
+  Groups → all 5 accounts, Order Quantity 1 each → group base unit 5 →
+  order quantity 60 = 12/account). Never combine size across accounts
+  into one account's position; never hold opposing positions on the same
+  instrument across the 5.
+- **Funded-phase (once an account passes):** starts at a reduced contract
+  count (3 mini confirmed; intermediate steps to 12 still unconfirmed),
+  scales back to 12 mini once that account's EOD balance reaches
+  $154,500 (+$4,500 profit), floor locks at $150,100. No consistency rule
+  once funded. Daily-loss-limit status once funded not yet reconfirmed
+  for Select 150K specifically — treat as open until sourced.
+- **Still confirm against the live Tradeify dashboard before trusting a
+  number that matters** (current buffer, exact funded contract count,
+  whether a daily loss limit applies) — these were researched for
+  planning, and the account's actual state is the source of truth once
+  real fills start happening.
 
 ## Risk-sizing rule — same discipline as the simulation, now with real stakes
 
