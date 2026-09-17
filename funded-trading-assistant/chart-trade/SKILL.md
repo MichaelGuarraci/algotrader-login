@@ -54,20 +54,28 @@ Added 2026-09-17 at user's request. Before setting SL/TP on any call:
   stays at its real structural level (beyond the zone/level, same as
   always) — never squeeze a stop tight just to fit the risk budget, that's
   how noise stops out a correct thesis. Instead: `contracts = floor(max
-  risk ÷ (structural SL distance in pts × $50))`, capped at 12. Only use
-  the full 12 when the structural stop is tight enough that 12 contracts
-  already fits the budget (≤2.5 pts at a full $4,500 buffer); size down
-  for wider structural stops instead of shrinking the stop. State the
-  contract count used and why whenever it's below 12.
+  risk ÷ (structural SL distance in pts × $50))`, capped at the account's
+  current contract limit (12 during this eval). Size down for wider
+  structural stops instead of shrinking the stop.
+- **Once FUNDED, default to that account's current max contract limit.**
+  Only size below max if a loss at max size would risk more than 1/3 of
+  the *current* buffer — recompute that check every call, but once funded
+  with a buffer that's grown past the early fragile stage, expect it to
+  almost always clear at max size. In practice this means: eval = flex
+  size to protect a thin/fixed buffer; funded with a healthy buffer =
+  max contracts by default.
+- **Put the recommended contract count at the top of every call**, right
+  after the NOW line — one number for the call, sized off the primary
+  zone's structural stop. If the secondary zone's stop is different enough
+  to need a different count, note that inline next to that zone instead of
+  changing the top-line number.
 - **State the drawdown distance every time**, not just when asked: current
   buffer to floor, and how many max-size losses in a row it would take to
   hit it (target: always ≥3). This goes in every trade-result report and
   before every new call that risks capital.
-- **Show every dollar figure both per-account and combined (×5), always
-  labeled which is which.** Risk, reward, and drawdown/buffer all get both
-  numbers side by side — never print just one and leave the other
-  implicit. This is what avoids confusing a trade's reward with an
-  unrelated number like the $9,000 eval target.
+- **All dollar figures are per-account, not combined.** Keep it to one
+  number per line — no ×5 combined figures unless the user explicitly
+  asks for the stack-wide total in that moment.
 - **TP sizing must respect the day's remaining room under the 40%
   consistency cap** whenever that day already has profit booked. Compute
   remaining room = (40% × $9,000) − today's profit-so-far *before*
@@ -168,16 +176,16 @@ ambiguous.
 
 ```
 NOW  <price>  <one-clause structural read>[ dead zone]
-Buffer: $<per-acct> per account · $<combined> combined (5x) — <N> max-loss trades from floor
+Buffer: $<per-acct> — <N> max-loss trades from floor
+Recommended: <n> contracts/account
 
 ZONE A ▸ <SELL/BUY> <low> – <high> (<one-clause reason>)          confidence <NN>%  [← primary]
- Contracts: <n>/account (<why, if <12>)
- Fill near TOP    (<high>) → TP <tp>  SL <sl>   R <r>   risk $<risk/acct> ($<risk x5> combined) · reward $<reward/acct> ($<reward x5> combined)
- Fill near BOTTOM (<low>)  → TP <tp>  SL <sl>   R <r>   risk $<risk/acct> ($<risk x5> combined) · reward $<reward/acct> ($<reward x5> combined)
+ Fill near TOP    (<high>) → TP <tp>  SL <sl>   R <r>   risk $<risk>   · reward $<reward>
+ Fill near BOTTOM (<low>)  → TP <tp>  SL <sl>   R <r>   risk $<risk>   · reward $<reward>
 
-ZONE B ▸ <SELL/BUY> <low> – <high> (<one-clause reason>)          confidence <NN>%
- Contracts: <n>/account (<why, if <12>)
- Fill near TOP    (<high>) → TP <tp>  SL <sl>   R <r>   risk $<risk/acct> ($<risk x5> combined) · reward $<reward/acct> ($<reward x5> combined)
+ZONE B ▸ <SELL/BUY> <low> – <high> (<one-clause reason>)          confidence <NN>%  [<n>/account if different from above]
+ Fill near TOP    (<high>) → TP <tp>  SL <sl>   R <r>   risk $<risk>   · reward $<reward>
+ Fill near BOTTOM (<low>)  → TP <tp>  SL <sl>   R <r>   risk $<risk>   · reward $<reward>
  Fill near BOTTOM (<low>)  → TP <tp>  SL <sl>   R <r>   risk $<risk/acct> ($<risk x5> combined) · reward $<reward/acct> ($<reward x5> combined)
 ```
 
