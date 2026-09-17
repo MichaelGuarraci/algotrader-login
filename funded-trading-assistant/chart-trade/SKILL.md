@@ -92,14 +92,17 @@ Added 2026-09-17 at user's request. Before setting SL/TP on any call:
 ## Practice trades — paper reps, separate from the real eval log
 
 Added 2026-09-17 at user's request. The user can call for a "practice"
-trade: full 12-contract sizing **per account, mirrored across all 5**
-(60 combined — same 5-account stack as the real eval, not a single
-account), ignoring the risk-budget contract-flex rule above, **not
-placed on the real eval accounts** and **not counted** toward the $9,000
-target, the $4,500 drawdown/buffer, or the 40% consistency ratio. These
-are paper reps for practice/calibration only — the point is getting used
-to what actual full-size funded execution looks like across the stack.
+trade: **always max contract size** (12/account, mirrored across all 5 =
+60 combined) — no risk-sizing calculation, no buffer check, none of that
+applies here. **Not placed on the real eval accounts** and **not
+counted** toward the $9,000 target, the $4,500 drawdown/buffer, or the
+40% consistency ratio. These are paper reps for practice/calibration
+only — the point is getting used to what actual full-size funded
+execution looks like across the stack.
 
+- **No Buffer line on practice calls** — there's no real buffer being
+  risked in practice mode, so don't print one. Drop straight from NOW
+  into `Recommended: 12 contracts/account (practice — always max)`.
 - Log practice trades in the Account Tracker's separate **Practice Log**
   section — never mixed into the Evaluation trade log table or its
   running totals.
