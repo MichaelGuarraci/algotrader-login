@@ -54,17 +54,19 @@ Added 2026-09-17 at user's request. Before setting SL/TP on any call:
   from the current buffer (not always $4,500 — it shrinks after a loss and
   only resets upward after a new equity peak). At a full $4,500 buffer
   that's ≤$1,500/account per trade.
-- **The contract-count formula is always the same, in eval or funded —
-  there is no "funded, so skip the math" shortcut.** SL stays at its real
-  structural level; never squeeze a stop tight just to fit the risk
-  budget. Compute: `contracts = floor(max risk ÷ (structural SL distance
-  in pts × $50))`, capped at the account's current contract limit (12
-  during this eval). This has to be **actually calculated every time**,
-  using that trade's real stop distance — never assert max contracts
-  just because the account is funded or the buffer looks big in absolute
-  dollars. It only lands on max when the math clears at that stop width
-  (tight stop, and/or a buffer that's grown large relative to it) — that's
-  an outcome of the formula, not a separate rule that overrides it.
+- **Contract count: `floor(max risk ÷ (structural SL distance in pts ×
+  $50))`, capped at the account's current limit** — this is the check,
+  always run it, never squeeze the stop instead of sizing down. SL always
+  stays at its real structural level.
+- **Once FUNDED with a buffer that's built real cushion, default to max
+  contracts and use judgment rather than rigidly recomputing every time.**
+  "Real cushion" means the buffer comfortably covers a max-size loss at
+  this setup's typical stop width with real room to spare — not just
+  "the account is funded." Still sanity-check an unusually wide stop
+  against the buffer before defaulting to max; don't blindly max out a
+  stop that's clearly wider than normal for this setup just because the
+  account has grown. Early in eval, or whenever the buffer is thin/fixed,
+  run the formula properly instead of defaulting.
 - **Put the recommended contract count at the top of every call**, right
   after the NOW line — one number for the call, sized off the primary
   zone's structural stop. If the secondary zone's stop is different enough

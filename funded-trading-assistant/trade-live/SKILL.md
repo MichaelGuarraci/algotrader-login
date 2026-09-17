@@ -65,15 +65,17 @@ the source of truth once real fills start happening.
   Pull the current buffer from the actual account dashboard, not a
   remembered number — it changes with every closed trade and every new
   equity peak.
-- **The contract-count formula is always the same, in eval or funded —
-  there is no "funded, so skip the math" shortcut.** SL stays at its real
-  structural level. Compute: `contracts = floor(max risk ÷ (structural SL
-  distance in pts × $50))`, capped at that account's current contract
-  limit. This has to be **actually calculated every time** from that
-  trade's real stop distance — never assert max contracts just because
-  the account is funded or the buffer looks large in absolute dollars.
-  Max contracts is an outcome of the formula (tight stop, and/or a buffer
-  grown large relative to it), never a separate override rule.
+- **Contract count: `floor(max risk ÷ (structural SL distance in pts ×
+  $50))`, capped at that account's current limit** — the check, always
+  run it, never squeeze the stop instead of sizing down. SL stays at its
+  real structural level.
+- **Once FUNDED with a buffer that's built real cushion, default to max
+  contracts and use judgment rather than rigidly recomputing every time.**
+  "Real cushion" means the buffer comfortably covers a max-size loss at
+  this setup's typical stop width with room to spare — not just "the
+  account is funded." Still sanity-check an unusually wide stop against
+  the buffer before defaulting to max. Early post-funding, or whenever
+  the buffer is thin, run the formula properly instead of defaulting.
 - **Put the recommended contract count at the top of every call**, right
   after the NOW line — one number, sized off the primary zone's
   structural stop (or the account's max, once funded and that clears).
