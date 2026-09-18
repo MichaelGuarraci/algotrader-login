@@ -9,9 +9,12 @@ description: Read an ES (E-mini S&P 500) chart screenshot and return a NOW / ZON
 
 **Active simulation (replaced the prior 50K funded sim on 2026-09-17):**
 5x **Tradeify Select 150K** accounts, stacked, starting from **EVALUATION**
-(not funded). The prior 50K Select Flex funded sim ended at Trade 37,
-record 22-15, net +$25,825, balance $75,825 — preserved in its history in
-the Account Tracker, not carried forward as this account's starting state.
+(not funded). This skill (`chart-trade`) stays scoped to the 5-stack
+practice simulation even though real trading (see the `trade-live` skill)
+starts on a single 150K account — the two run in parallel, don't conflate
+them. The prior 50K Select Flex funded sim ended at Trade 37, record
+22-15, net +$25,825, balance $75,825 — preserved in its history in the
+Account Tracker, not carried forward as this account's starting state.
 
 - **Per-account eval rules:** profit target $9,000, EOD trailing drawdown
   $4,500, floor locks permanently at $150,100 (start + $100) once earned,

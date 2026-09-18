@@ -9,15 +9,18 @@ This is the real-money counterpart to the `chart-trade` simulation skill.
 Same call format, same risk discipline — the difference is everything
 below that only matters once actual dollars are on the line.
 
-## Account context — Tradeify Select, any size — confirm which one first
+## Account context — Tradeify Select, confirmed plan: single 150K
 
-This is real Tradeify **Select** (the same family the simulation has been
-modeling), but the exact size purchased isn't fixed to the 5x150K stack —
-it could be a single 50K, a single 150K, or another combination. **Before
-the first real call, confirm which size(s) were actually purchased** and
-apply the matching row below. All of these are Select-family evaluation
-accounts — confirmed no daily loss limit and a 40% consistency rule
-(delays passing, doesn't fail the account) during eval, across all sizes.
+**Confirmed 2026-09-18: real trading starts on a single Tradeify Select
+150K account** — not the 5x150K stack the `chart-trade` simulation runs
+(that sim continues in parallel as practice/calibration, it's not what's
+actually being traded for real). Use the $150K row below by default;
+the table stays here for reference in case the size purchased changes or
+more accounts get added later, but don't ask which size before every call
+now that it's confirmed — only re-confirm if the user says the plan
+changed. All of these are Select-family evaluation accounts — confirmed
+no daily loss limit and a 40% consistency rule (delays passing, doesn't
+fail the account) during eval, across all sizes.
 
 | Size | Eval profit target | Eval/funded trailing drawdown | Eval contracts (full, day one) | Funded starting contracts | Funded full-scale trigger | Floor lock point |
 |---|---|---|---|---|---|---|
