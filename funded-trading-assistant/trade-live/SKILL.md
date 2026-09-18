@@ -61,6 +61,41 @@ whether a daily loss limit applies to this specific size/payout-policy.
 This table was researched for planning; the account's actual state is
 the source of truth once real fills start happening.
 
+## Tradeify platform rules — session, copying, and automation
+
+- **Trading day:** 6:00 PM ET → 5:00 PM ET the next day. **Flatten all
+  positions by 4:45 PM ET** — an entry after 3:45 PM ET may not resolve
+  before that deadline, flag it. Dead zone 11:00–13:10 ET (see "Before
+  every call" below). News trading is assumed unrestricted unless the
+  dashboard says otherwise for this specific account.
+- **Multi-account structure:** up to 5 simultaneous Tradeify accounts /
+  $750K combined buying power, any mix of Select/Growth/Lightning.
+  Same-direction mirroring across accounts **you personally own** is
+  allowed scaling, not a violation. Never combine size across accounts
+  into one account's position; never hold opposing positions on the same
+  instrument across your own accounts.
+- **Copy trading / automation policy (confirmed, but verify before
+  relying on it — rules can change and differ by account type):**
+  Tradeify allows copy trading across up to 5 accounts you personally
+  own and manage — copying someone else's strategy, or third-party group
+  copying, is not permitted. Trader-owned bots/algorithms are allowed if
+  you can prove sole ownership of the strategy; it can't be shared with
+  other traders or firms, and HFT bots are prohibited. Third-party tools
+  (trade copiers, automation services) are usable **at your own risk** —
+  Tradeify isn't responsible for errors or glitches caused by external
+  software.
+- **ES contract rollover:** E-mini S&P futures expire quarterly (Mar/Jun/
+  Sep/Dec). Volume rolls to the next front-month contract about a week
+  before expiration — confirm you're trading the current front-month
+  symbol (not the about-to-expire one) before entering, don't assume the
+  chart's continuous symbol (e.g. `ES1!`) tells you which specific
+  contract an order actually routes to.
+- **Always verify against the live Tradeify dashboard** for anything
+  that materially matters — current buffer, daily loss limit status,
+  payout policy, exact automation/copying rules for this account type.
+  This section is a planning reference, not a substitute for checking
+  the account itself.
+
 ## Risk-sizing rule — same discipline as the simulation, now with real stakes
 
 - **Position must survive at least 3 consecutive max-loss trades before
