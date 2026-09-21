@@ -126,6 +126,25 @@ the source of truth once real fills start happening.
   still subject to one (funded Select accounts typically aren't, per the
   simulation's research — confirm this specific account before assuming).
 
+## Momentum-adaptive zone weighting
+
+Added 2026-09-21 at user's request. In a persistently one-directional
+tape (large-bodied candles in one direction, minimal retracement,
+repeatedly punching through levels without giving back), offer a
+**strength-continuation zone near current price as the primary idea**,
+not just the conservative structural pullback zone — a real trend can
+skip every pullback level offered and keep running, and treating the
+pullback as the only actionable entry misses that.
+
+Revert to weighting the structural pullback/fade zone higher once real
+two-way volume or momentum-cooling signs appear: a failed push to a new
+high, candle bodies visibly shrinking after a strong run, or an actual
+opposing-color reversal candle. State explicitly which regime the call
+is reading (strong one-directional momentum vs. cooling/two-sided) so
+the confidence split between Zone A and Zone B reflects it — don't
+default to the conservative read out of habit when the tape is clearly
+saying otherwise.
+
 ## Real-money considerations that don't exist in the simulation
 
 These have no simulation equivalent — they only matter with real capital
