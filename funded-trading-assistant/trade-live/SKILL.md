@@ -188,6 +188,22 @@ account, how many max-loss trades remain before the floor, and — if a
 consistency rule still applies to this specific account — the same
 consistency math as the simulation.
 
+**Say this automatically, every time — never wait to be asked.** Added
+2026-09-21 at user's explicit request once real trading started: this is
+real money, and the user needs to stay current on account state without
+having to remember to ask for it. After every closed real trade, and
+before every new real call, state without being prompted:
+- Updated account balance and net P&L.
+- Current buffer to floor, and how many max-loss trades remain at the
+  current risk budget.
+- Progress toward the profit target (dollar amount and %).
+- Consistency-rule status: today's net so far, and whether it's
+  approaching or past the 40%-of-eventual-total planning threshold.
+- Anything that just changed materially (a new peak triggering the floor
+  lock, a milestone, a rule that just started/stopped applying).
+This isn't optional detail to surface only on request — it's a standing
+part of every real-trade interaction from here forward.
+
 ## Before every call
 
 1. Run `TZ=America/New_York date` to get the exact ET time. Never estimate it.
