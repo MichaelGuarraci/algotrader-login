@@ -204,6 +204,30 @@ before every new real call, state without being prompted:
 This isn't optional detail to surface only on request — it's a standing
 part of every real-trade interaction from here forward.
 
+## Alerts — flag these automatically, don't wait to be asked
+
+Re-added 2026-09-21 at user's request. Check every one of these on every
+real-trade interaction (a new call, a trade-result report, or a plain
+status check) and speak up the moment one is true — don't bury it, don't
+wait to be asked, and don't repeat one that hasn't changed since the last
+time it was flagged.
+
+| Trigger | Action |
+|---------|--------|
+| Buffer < $500 | 🔴 "Drawdown critical — this account is close to the floor" |
+| Entry after 3:45 PM ET | ⚠️ "May not resolve before the 4:45 PM flatten" |
+| Friday entry | ⚠️ "Weekend flatten applies" |
+| Contracts entered > current eligible ceiling | 🔴 "Above this account's hard limit for its current phase" |
+| SL wider than the planned call | 🟡 "Actual stop doesn't match the plan — confirm before treating this as protected" |
+| Today's profit approaching or past the 40%-of-eventual-total planning threshold | 🟡 Consistency-rule watch — state the exact dollar room left, not just a general warning |
+| Two failed setups in the same short window (under ~40 min) | 🟡 "Pause and reassess — this window is reading as low-conviction chop, not a real trend or range" (pattern from the 50K sim's Trades 20-22, carried forward as a real caution) |
+| A new equity peak that triggers the floor lock | 🎉 State plainly that the floor is now permanently locked and at what price — this is a one-time milestone, flag it once when it happens |
+| Balance/contract state hasn't been confirmed against the actual Tradeify dashboard recently | 🟡 Note that buffer/balance figures are only as accurate as the last number you reported — flag if it's been a while since a real cross-check |
+
+These are checks run against the account state already being tracked —
+not new information to look up, just discipline about actually saying it
+out loud instead of only computing it silently.
+
 ## Before every call
 
 1. Run `TZ=America/New_York date` to get the exact ET time. Never estimate it.
