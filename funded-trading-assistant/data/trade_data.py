@@ -34,6 +34,7 @@ def load_trades(path=CSV_PATH):
                 "confidence": confidence,
                 "management": r["management"],
                 "notes": r["notes"],
+                "account": r.get("account", "Sim-50K-Flex"),
                 "points": points,
                 "pnl": pnl,
                 "win": 1 if pnl > 0 else 0,
@@ -46,4 +47,18 @@ if __name__ == "__main__":
     total_pnl = sum(t["pnl"] for t in trades)
     wins = sum(t["win"] for t in trades)
     print(f"{len(trades)} trades loaded. Wins: {wins}-{len(trades)-wins}. "
-          f"Total P&L: ${total_pnl:,.2f}. Balance: ${50000+total_pnl:,.2f}")
+          f"Total P&L: ${total_pnl:,.2f}.")
+
+    # Different accounts have different starting balances, so a single
+    # combined "50000 + total_pnl" figure would be misleading once more
+    # than one account is in the log -- break it out per account instead.
+    starting_balance = {"Sim-50K-Flex": 50000, "Eval-150K-Select": 150000}
+    accounts = sorted(set(t["account"] for t in trades))
+    for acct in accounts:
+        acct_trades = [t for t in trades if t["account"] == acct]
+        acct_pnl = sum(t["pnl"] for t in acct_trades)
+        acct_wins = sum(t["win"] for t in acct_trades)
+        base = starting_balance.get(acct)
+        bal = f"${base + acct_pnl:,.2f}" if base is not None else "unknown starting balance"
+        print(f"  {acct}: {len(acct_trades)} trades, {acct_wins}-{len(acct_trades)-acct_wins}, "
+              f"P&L ${acct_pnl:,.2f}, balance {bal}")

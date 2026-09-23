@@ -24,11 +24,11 @@ df = pd.DataFrame(rows)
 # the user's own off-script entries)
 df["confidence"] = df["confidence"].fillna(df["confidence"].median())
 
-X = df[["strategy", "session", "direction", "confidence", "contracts"]]
+X = df[["strategy", "session", "direction", "confidence", "contracts", "account"]]
 y = df["win"]
 
 pre = ColumnTransformer([
-    ("cat", OneHotEncoder(handle_unknown="ignore"), ["strategy", "session", "direction"]),
+    ("cat", OneHotEncoder(handle_unknown="ignore"), ["strategy", "session", "direction", "account"]),
 ], remainder="passthrough")
 
 model = Pipeline([
@@ -83,7 +83,7 @@ model.fit(X, y)
 print("--- Predicted win probability by Strategy (RTH, direction=BUY, confidence=50, contracts=4) ---")
 for strat in df["strategy"].unique():
     row = pd.DataFrame([{"strategy": strat, "session": "RTH", "direction": "BUY",
-                          "confidence": 50, "contracts": 4}])
+                          "confidence": 50, "contracts": 4, "account": "Sim-50K-Flex"}])
     p = model.predict_proba(row)[0, 1]
     n = len(df[df["strategy"] == strat])
     actual_wr = df[df["strategy"] == strat]["win"].mean()
@@ -93,8 +93,18 @@ print()
 print("--- Predicted win probability by Session (strategy=Resistance/Support Fade, SELL, conf=50) ---")
 for sess in df["session"].unique():
     row = pd.DataFrame([{"strategy": "Resistance / Support Fade", "session": sess,
-                          "direction": "SELL", "confidence": 50, "contracts": 4}])
+                          "direction": "SELL", "confidence": 50, "contracts": 4, "account": "Sim-50K-Flex"}])
     p = model.predict_proba(row)[0, 1]
     n = len(df[df["session"] == sess])
     actual_wr = df[df["session"] == sess]["win"].mean()
     print(f"{sess:<20} model_p={p:.1%}   actual_wr(n={n})={actual_wr:.1%}")
+
+print()
+print("--- Predicted win probability by Account (RTH, direction=BUY, confidence=50, contracts=4) ---")
+for acct in df["account"].unique():
+    row = pd.DataFrame([{"strategy": "Resistance / Support Fade", "session": "RTH",
+                          "direction": "BUY", "confidence": 50, "contracts": 4, "account": acct}])
+    p = model.predict_proba(row)[0, 1]
+    n = len(df[df["account"] == acct])
+    actual_wr = df[df["account"] == acct]["win"].mean()
+    print(f"{acct:<20} model_p={p:.1%}   actual_wr(n={n})={actual_wr:.1%}")
