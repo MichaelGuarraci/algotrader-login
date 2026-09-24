@@ -166,6 +166,47 @@ paragraph before the block.
    account's actual current count and update the multiplier — don't
    assume all 5 accounts are always in sync once any of them pass.
 
+## Zone identification — ICT concepts (added 2026-09-23 at user's request)
+
+Zone A and Zone B are derived from ICT (Inner Circle Trader) concepts, not
+generic support/resistance. This replaces the prior generic-structure
+approach for every future call — apply it by default, not just when asked.
+
+- **Order Blocks (OB)** — the last opposing candle before an impulsive move;
+  the presumed origin of the institutional orders driving that move. A zone
+  anchored to an OB is a bet that price returns to that origin before
+  continuing.
+- **Fair Value Gaps (FVG)** — a 3-candle imbalance (the gap between candle
+  1's wick and candle 3's wick) left behind by an impulsive move. Price
+  often returns to fill/rebalance an FVG before the move resumes.
+- **Liquidity sweeps** — a wick that runs stops above/below an obvious swing
+  high/low just before reversing. A zone sitting just beyond a swept
+  liquidity pool is stronger than one that hasn't swept anything yet.
+- **Market Structure Shift (MSS) / Break of Structure (BOS)** — the point
+  where price stops making higher-highs/higher-lows (or lower-lows/
+  lower-highs) and reverses that pattern, confirming a change in the
+  dominant order flow. A zone that trades against the pre-shift trend
+  needs a confirmed MSS first — don't anchor a reversal zone on a move
+  that hasn't broken structure yet.
+- **Premium / Discount** — the dealing range's 50% (equilibrium) line.
+  SELL zones belong in the premium (upper) half of the range, BUY zones in
+  the discount (lower) half. A SELL zone sitting in discount (or a BUY
+  zone in premium) is a red flag on the setup, not just a footnote.
+- **Optimal Trade Entry (OTE)** — the 61.8–79% Fibonacci retracement of the
+  impulse leg. When it lines up inside an OB or FVG, that overlap is the
+  preferred entry pocket within the zone.
+
+Each zone's one-clause reason should name the actual concept driving it —
+"bearish OB retest," "FVG fill before continuation," "liquidity sweep of
+session high then MSS down" — instead of generic language like "resistance
+cluster." Confidence still follows the existing calibration process; naming
+an ICT concept doesn't earn a confidence bump on its own — a weak OB is
+still a weak OB.
+
+This changes how a zone's location and reasoning are derived. It does not
+change the output format, the risk-sizing rule, the dead-zone/time-check
+rules, or anything else in this skill.
+
 ## Reading a result screenshot ("sl hit", "tp hit", etc.)
 
 When the user posts a chart with horizontal lines already drawn on it after a
