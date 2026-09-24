@@ -178,6 +178,51 @@ Drive on 2026-09-24) — this is the real, documented strategy AlgoTrader
 Pro's bot runs, not a generic ICT summary. The weighted scoring below
 matches what `es_scan.py`'s confidence numbers are already built on.
 
+### The score is an input, not the verdict (added 2026-09-24 at user's
+### request — don't be mechanical about this)
+
+The point table below is context for a discretionary read, not a formula
+that outputs confidence by itself. This mirrors a decision the user's own
+ICT Co-Pilot project already made and documented: its dev log for
+2026-06-24 records that feeding the bot's numeric score directly to the
+reasoning layer "anchored it to the rigid strategy," and the fix was to
+have it "read raw tape observations... and form its own loose,
+discretionary call" instead — the user's own words for what he wanted:
+**"improvisational and discernible, loose like a real trader."** Apply the
+same principle here.
+
+In practice: weigh whatever is actually visible on the chart alongside the
+ICT signals, and let it move confidence up or down even when it isn't one
+of the six scored concepts —
+
+- **VWAP position** — price holding above/below VWAP is a real intraday
+  bias tell on its own, independent of any ICT signal.
+- **RSI / momentum** — divergence between price and momentum (new high on
+  weakening momentum, etc.) is a legitimate warning even with a clean OB.
+- **Opening Range Breakout (ORB) status** — trading above/below the
+  session's opening range adds or subtracts conviction.
+- **Multi-timeframe trend (1h/daily, not just the 15-min filter)** — a
+  15-min zone that fights the daily trend needs more, not the same,
+  evidence to justify taking.
+- **Relative strength vs. a correlated instrument** (ties to SMT Divergence
+  above) — if another instrument fails to confirm the move, that's real
+  information even without a named ICT pattern for it.
+- **The candle's own story** — a wide-body thrust vs. a doji at the same
+  level tells you who's actually in control there; read it the way you'd
+  read the tape, not just the pattern's name.
+- **How extended the move already is** (ties to the earlier "due for a
+  pause" read) — a technically clean signal arriving after an unusually
+  stretched, pauseless move deserves a lower confidence than the same
+  signal arriving fresh.
+
+None of this replaces naming the real ICT concept when it's genuinely the
+driver — a clean OB+FVG+OTE stack is still the strongest thing on the
+board. It just means a technically-scored 6.5 with everything else
+screaming exhaustion isn't automatically higher confidence than a 5.0 with
+VWAP, momentum, and higher-timeframe trend all agreeing. Form one
+discretionary judgment from all of it, the way an actual profitable
+discretionary trader would — not a lookup from a points table.
+
 ### Weighted signal score
 
 | Signal | Points | Detection notes |
