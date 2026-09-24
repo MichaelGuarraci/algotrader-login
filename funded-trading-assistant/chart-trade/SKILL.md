@@ -248,6 +248,60 @@ This changes how a zone's location and reasoning are derived. It does not
 change the output format, the risk-sizing rule, or anything else in this
 skill.
 
+### Extended ICT pattern library (pulled from the user's Obsidian vault,
+### 2026-09-24) — use these to sharpen zone reasoning and stop placement,
+### not to replace the 6-signal score above
+
+- **Breaker Block** — a broken order block that flips polarity (former
+  support that failed becomes resistance, and vice versa). Needs 2-3 prior
+  touches before the break, then a retest from the other side. **Entry is
+  on the retest rejection, never the initial break** — the break itself is
+  the trap, not the trade.
+- **Turtle Soup** — a named liquidity-sweep reversal: price runs a level
+  tested 3+ times, sweeps 5-20pts beyond it, then closes back through it.
+  **Stop goes beyond the false-break extreme, not the original swing
+  level** — placing it at the original level is the single most common
+  mistake with this pattern and gets swept too.
+- **Rejection Block vs. Order Block** — an OB marks a trend's *origin*
+  (continuation play, buy the pullback). A rejection block forms *after*
+  an extended move, with a long wick showing exhaustion (reversal play,
+  short the breakdown). Don't treat a rejection block like a fresh OB —
+  they imply opposite trade directions.
+- **Equal Highs / Equal Lows** — two or more swing points at the same
+  price are an engineered liquidity pool, and a stronger sweep target than
+  a single untested swing. When a zone's stop-hunt target lines up with
+  equal highs/lows, that's added conviction the sweep actually happens.
+- **Propulsion Block** — a 1-3 candle compression (40-60% of the prior
+  impulsive candle's range) after an impulse. Breakout **beyond the prior
+  impulse's extreme** = continuation; breakout **through the opposing
+  extreme** = reversal. Useful for reading which way a stall resolves
+  before it resolves.
+- **AMD cycle (Accumulation-Manipulation-Distribution)** — reinforces the
+  existing "don't chase the impulse" rule with real vocabulary: the
+  impulsive move chasing price *is* the manipulation phase. **Never enter
+  during manipulation** — wait for the BOS that confirms distribution has
+  started, then enter the retracement into that BOS.
+- **Optimal Bias (three-day rule)** — on the daily timeframe: last 3 daily
+  candles higher-high+higher-low = UP bias; lower-high+lower-low = DOWN;
+  mixed = NEUTRAL. Use this as a sanity check on the bigger-picture reads
+  already done on 45-min+ charts — a zone that fights the 3-day bias needs
+  a materially higher score to justify taking it.
+- **Silver Bullet windows (10-11 AM and 2-3 PM ET)** — inside the
+  already-good New York session, these two hours specifically are where
+  the strategy reference's data shows the highest institutional activity.
+  Not a hard filter like the dead zone, but a real tiebreaker: prefer these
+  windows when a setup is marginal.
+- **SMT Divergence** — if price data for a correlated instrument (e.g. NQ
+  alongside ES) is available, a failure of that instrument to confirm an
+  ES move is a real reversal warning. Optional confluence — most chart
+  screenshots are single-instrument, so don't block a call for lacking it.
+- **Weekly Profiles / Dealing Ranges / IPDA 20-40-60 day ranges / Daily
+  Profiles (D+/D-/DN)** — genuine higher-timeframe institutional-flow
+  concepts, but they need multi-day OHLC data a single intraday screenshot
+  usually doesn't show. Apply them when that data is actually visible
+  (e.g. a daily chart is posted); don't fabricate a weekly/IPDA read off a
+  5-min crop that doesn't show it.
+
 ## Reading a result screenshot ("sl hit", "tp hit", etc.)
 
 When the user posts a chart with horizontal lines already drawn on it after a
