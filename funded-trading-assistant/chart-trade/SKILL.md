@@ -166,6 +166,40 @@ paragraph before the block.
    account's actual current count and update the multiplier — don't
    assume all 5 accounts are always in sync once any of them pass.
 
+## Input quality — ask for what's missing instead of silently working
+## around it (added 2026-09-24)
+
+Several of the discretionary inputs and ICT concepts below need data a
+single tight 1-5min screenshot usually doesn't show. Don't fabricate them
+and don't just quietly omit them — when one would plausibly change the
+call, ask for it in one line:
+
+- **Higher-timeframe candles (1h/4h/daily)** — needed for the Optimal Bias
+  three-day rule, Weekly Profiles, Dealing Ranges, and the multi-timeframe
+  trend check. Most calls tonight have been made without this; when a zone
+  is borderline, say so and ask for a higher-timeframe screenshot rather
+  than guessing the bigger picture from memory of earlier charts.
+- **VWAP / RSI on the chart** — if the user's TradingView layout has these
+  as indicators, ask them to leave them visible. Don't estimate a VWAP
+  distance or RSI value that isn't actually shown.
+- **A second correlated instrument (e.g. NQ alongside ES)** — only needed
+  for SMT Divergence; optional, don't block a call for lacking it, but
+  mention it's available as an upgrade when a call is close/marginal.
+- **Account panel (balance/drawdown) in the same message as a chart** when
+  sizing is actually needed — don't carry forward a buffer number from
+  several messages ago as if it's still current. If it's stale, say so and
+  ask for a fresh number before sizing, the same way this has been handled
+  all along.
+- **Tradovate order-log exports on a regular cadence, not one-off** — the
+  `trades.csv` / `ml_train.py` pipeline in `data/` is only as good as what
+  gets fed into it. If it's been a while since the last export, say so
+  when relevant instead of letting the log go stale silently.
+
+None of this blocks giving a call — it's the same principle as showing two
+zones with honest low confidence instead of no zones: give the best read
+possible with what's actually there, and say plainly what more would
+sharpen it, rather than pretending the read is as sharp as it could be.
+
 ## Zone identification — ICT concepts (added 2026-09-23, grounded 2026-09-24)
 
 Zone A and Zone B are derived from ICT (Inner Circle Trader) concepts, not
