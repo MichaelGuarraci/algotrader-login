@@ -200,8 +200,15 @@ don't call a zone primary off one concept just because it looks clean.
   of how clean the level looks.
 - **SELL** needs `FIB_OTE` **or** `PREMIUM` — same logic in reverse.
 
-A zone that doesn't clear its gate isn't a lower-confidence zone, it's not a
-zone — drop it rather than listing it as Zone B with a low percentage.
+**Updated 2026-09-24 at user's request: still show two zones even when the
+score is below 6.0 or a gate doesn't clear** — this is an advisory tool, not
+the automated bot, and the user is the final human check on every trade, so
+show what's there and let them decide. What doesn't change: confidence must
+say so honestly. A zone below threshold or missing its gate gets a low
+confidence number (well under 50%, often under 30%) and the one-clause
+reason states what's missing — "FVG only, 3.0/6.0, no OTE/Premium
+confluence" — not a vague hedge. Never quietly round a weak setup up to
+sound more solid than it is just to fill the slot.
 
 ### Kill zones — this is where the existing dead-zone rule comes from
 
