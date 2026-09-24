@@ -166,46 +166,87 @@ paragraph before the block.
    account's actual current count and update the multiplier — don't
    assume all 5 accounts are always in sync once any of them pass.
 
-## Zone identification — ICT concepts (added 2026-09-23 at user's request)
+## Zone identification — ICT concepts (added 2026-09-23, grounded 2026-09-24)
 
 Zone A and Zone B are derived from ICT (Inner Circle Trader) concepts, not
 generic support/resistance. This replaces the prior generic-structure
 approach for every future call — apply it by default, not just when asked.
 
-- **Order Blocks (OB)** — the last opposing candle before an impulsive move;
-  the presumed origin of the institutional orders driving that move. A zone
-  anchored to an OB is a bet that price returns to that origin before
-  continuing.
-- **Fair Value Gaps (FVG)** — a 3-candle imbalance (the gap between candle
-  1's wick and candle 3's wick) left behind by an impulsive move. Price
-  often returns to fill/rebalance an FVG before the move resumes.
-- **Liquidity sweeps** — a wick that runs stops above/below an obvious swing
-  high/low just before reversing. A zone sitting just beyond a swept
-  liquidity pool is stronger than one that hasn't swept anything yet.
-- **Market Structure Shift (MSS) / Break of Structure (BOS)** — the point
-  where price stops making higher-highs/higher-lows (or lower-lows/
-  lower-highs) and reverses that pattern, confirming a change in the
-  dominant order flow. A zone that trades against the pre-shift trend
-  needs a confirmed MSS first — don't anchor a reversal zone on a move
-  that hasn't broken structure yet.
-- **Premium / Discount** — the dealing range's 50% (equilibrium) line.
-  SELL zones belong in the premium (upper) half of the range, BUY zones in
-  the discount (lower) half. A SELL zone sitting in discount (or a BUY
-  zone in premium) is a red flag on the setup, not just a footnote.
-- **Optimal Trade Entry (OTE)** — the 61.8–79% Fibonacci retracement of the
-  impulse leg. When it lines up inside an OB or FVG, that overlap is the
-  preferred entry pocket within the zone.
+**Source of truth: AlgoTrader Pro's own "08 - ICT Strategy Reference" and
+"ICT Methodology MOC"** (pulled from the user's Obsidian vault via Google
+Drive on 2026-09-24) — this is the real, documented strategy AlgoTrader
+Pro's bot runs, not a generic ICT summary. The weighted scoring below
+matches what `es_scan.py`'s confidence numbers are already built on.
 
-Each zone's one-clause reason should name the actual concept driving it —
-"bearish OB retest," "FVG fill before continuation," "liquidity sweep of
-session high then MSS down" — instead of generic language like "resistance
-cluster." Confidence still follows the existing calibration process; naming
-an ICT concept doesn't earn a confidence bump on its own — a weak OB is
-still a weak OB.
+### Weighted signal score
+
+| Signal | Points | Detection notes |
+|---|---|---|
+| **Order Block (OB)** | 3.0 | Last opposing candle before an impulsive move (last down-candle before an up-move = bullish OB, and reverse). Requires ~1.5× volume + body ≥0.4%. **Most reliable signal in the system.** |
+| **Fair Value Gap (FVG)** | 3.0 | 3-candle imbalance, no overlap between candle 1's wick and candle 3's wick. Requires ≥0.3% gap. **Second most reliable — pairs extremely well with OB.** |
+| **Fibonacci OTE** | 2.5 | 62–79% retracement of a significant swing. **Most reliable single BUY confirm**, especially stacked with an OB/FVG at that level. |
+| **Volume Imbalance / Liquidity Sweep** | 1.5 | A wick running stops through an obvious swing high/low before reversing (buy-side sweep → bearish reversal; sell-side sweep → bullish reversal), or an abnormal volume spike vs. recent average. |
+| **Market Structure (STRUCT)** | 1.0 | Break of Structure (BOS) or Change of Character (ChoCh) confirming trend direction. |
+| **Premium/Discount** | 1.0 | Price above the swing's midpoint = premium (look to sell); below = discount (look to buy). |
+
+**Entry threshold: ≥6.0 points from 3+ distinct signal types.** A single
+strong signal (e.g. a clean OB alone at 3.0) is not enough on its own —
+don't call a zone primary off one concept just because it looks clean.
+
+### Entry gates (non-negotiable)
+
+- **BUY** needs `FIB_OTE` **or** (`DISCOUNT` + `STRUCT`) — a BUY zone in the
+  premium half with no OTE confluence fails the gate, full stop, regardless
+  of how clean the level looks.
+- **SELL** needs `FIB_OTE` **or** `PREMIUM` — same logic in reverse.
+
+A zone that doesn't clear its gate isn't a lower-confidence zone, it's not a
+zone — drop it rather than listing it as Zone B with a low percentage.
+
+### Kill zones — this is where the existing dead-zone rule comes from
+
+- **New York Open (9:30–11:00 AM ET)**: high activity, preferred window.
+- **Dead Zone (11:00 AM–1:10 PM ET)**: blocked in the live bot
+  (`ENABLE_HARD_KILLZONE_BLOCK`), measured at **+0.16 PF** for filtering it
+  out — this is the actual origin of the `[dead zone]` tag already in this
+  skill, not an arbitrary cutoff.
+- **New York Afternoon (1:00–4:00 PM ET)**: moderate activity.
+- **London Open (2:00–5:00 AM ET)**: not traded by the bot.
+- **HTF 15-min bias filter**: the bot only takes 5-min entries aligned with
+  15-min structure — measured at **+0.42 PF**, the single biggest filter in
+  the system. Read the higher timeframe before trusting a lower-timeframe
+  zone that fights it.
+
+### Filter vs. bonus — the one hard-won lesson worth keeping
+
+*"Only filters improve PF. Bonuses add trades."* Every real improvement to
+this system has been a filter that removes bad setups, never an added
+signal source that just generates more trades. When in doubt about whether
+to add a new concept to a zone's justification or tighten an existing gate,
+tighten — don't add.
+
+### What does NOT port over
+
+The live bot's SL/TP (1.5% fixed SL, 4.0% fixed TP, trailing at +1.5%,
+breakeven at +1.0%) are **equity-percentage rules for the stock version of
+AlgoTrader Pro and do not apply to ES.** ES is $50/point, not a percentage
+instrument — SL/TP here stay structural (OB/FVG boundary, swing high/low),
+exactly as the existing Output Format rules already require. Don't compute
+a 1.5%/4.0% stop on an ES price.
+
+### Writing the zone
+
+Each zone's one-clause reason should name the actual concept and score
+driving it — "bearish OB (3.0) + FVG fill (3.0) = 6.0, MSS confirmed," not
+generic language like "resistance cluster." Confidence still follows the
+existing calibration process; naming an ICT concept doesn't earn a
+confidence bump on its own — a weak OB is still a weak OB, and a zone that
+scores 6.5 barely over threshold isn't the same conviction as one that
+scores 9+.
 
 This changes how a zone's location and reasoning are derived. It does not
-change the output format, the risk-sizing rule, the dead-zone/time-check
-rules, or anything else in this skill.
+change the output format, the risk-sizing rule, or anything else in this
+skill.
 
 ## Reading a result screenshot ("sl hit", "tp hit", etc.)
 
